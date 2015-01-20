@@ -1,3 +1,7 @@
+//2-input 32-bit OR gate 
+//Copyright: Northwestern EECS 362 Team Senioritis 
+
+
 module OR2_32(F,A,B);
 
   input [31: 0] A, B; 
