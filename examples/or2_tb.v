@@ -1,6 +1,6 @@
-// and2_tb.v
+// or2_tb.v
 
-// 2-input AND gate testbench
+// 2-input OR gate testbench
 
 // ------------------------------------------------------------------
 // Copyright (c) 2006 Susan Lysecky, University of Arizona
@@ -9,22 +9,16 @@
 // ------------------------------------------------------------------
 
 module Testbench;
-
-initial
- begin
-    $dumpfile("test.vcd");
-    $dumpvars(0,test);
- end
    
    reg A_t, B_t;
    wire F_t;
 
-   AND2gate AND2gate_1(A_t, B_t, F_t);
+   OR2gate OR2gate_1(A_t, B_t, F_t);
    
    initial
    begin
 
-   $display("And2 Test Bench");
+   $display("OR2 Test Bench");
    $monitor("A is %b, B is %b, F_t is %b.", A_t, B_t, F_t);
       
       //case 0
