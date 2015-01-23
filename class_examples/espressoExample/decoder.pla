@@ -1,0 +1,66 @@
+
+# Number of input signals (6 bit opcodes)
+.i 6
+
+# Number of output signals (3 bits; one for each instr type)
+.o 3
+
+# Input variable names - separated by spaces
+.ilb op0 op1 op2 op3 op4 op5
+# Output variable names - separated by spaces
+.ob isI, isJ, isR
+
+# Number of truth table entries
+.p 49
+
+#12345  IJR
+000000  001 # Integer R-type
+000001  001 # FP R-type
+000010  010 # J
+000011  010 # JAL
+000100  100 # BEQZ
+000101  100 # BNEZ
+000110  100 # BFPT
+000111  100 # BFPF
+001000  100 # ADDI
+001001  100 # ADDUI
+001010  100 # SUBI
+001011  100 # SUBUI
+001100  100 # ANDI
+001101  100 # ORI
+001110  100 # XORI
+001111  100 # LHI
+010000  010 ##RFE
+010001  010 ##TRAP
+010010  100 # JR
+010011  100 # JALR
+010100  100 # SLLI
+010101  000 ##
+010110  100 # SRLI
+010111  100 # SRAI
+011000  100 # SEQI
+011001  100 # SNEI
+011010  100 # SLTI
+011011  100 # SGTI
+011100  100 # SLEI
+011101  100 # SGEI
+011110  000 ##
+011111  000 ##
+100000  100 # LB
+100001  100 # LH
+100010  000 ##
+100011  100 # LW
+100100  100 # LBU
+100101  100 # LHU
+100110  100 # LF
+100111  100 # LD
+101000  100 # SB
+101001  100 # SH
+101010  000 ##
+101011  100 # SW
+101100  000 ##
+101101  000 ##
+101110  100 # SF
+101111  100 # SD
+11----  000 ## 
+.e
