@@ -1,40 +1,59 @@
 // ------------------------------------------------------------------
 // Testbench for STD Lib Gates
-// 
-// ------------------------------------------------------------------
+//-------------------------------------------------------------------- 
 
 module Testbench;
-   
-   reg A_1, B_1, C_1, Sel_0,Sel_1;
-   reg[31: 0] A_32, B_32;
-   
-   wire[31: 0] AND2_32_OUT;
-   wire[31: 0]  OR2_32_OUT;
-   wire MUX2_1_OUT, MUX3_1_OUT;
 
-   AND2_32 AND2_32(AND2_32_OUT, A_32, B_32);
-   OR2_32 OR2_32(OR2_32_OUT, A_32, B_32);
-   MUX2_1 MUX2_1(MUX2_1_OUT, A_1, B_1, Sel_0);
-   MUX3_1 MUX3_1(MUX3_1_OUT, A_1, B_1, C_1, Sel_0, Sel_1);
+  reg[0:0] cycle, Sel;
+  //32-bit input
+  reg[31: 0] A_32, B_32;
+  //5-bit input
+  reg[4: 0] A_5, B_5;
    
-   initial
-   begin
-      //case 0
-      #1 A_32 <= 32'd0; B_32 <= 32'd0; A_1 <= 1'd0; B_1 <=1'd0; Sel_0<=1'd0;
-      #1 if (AND2_32_OUT != 5) //wrong change it back...
-      begin
-         $display ("AND2_32 ERROR. IN:%d, %d. OUt:%d. EXPECTED: 0", A_32, B_32, AND2_32_OUT);
-      end
-      if (OR2_32_OUT != 5) //wrong change it back...
-      begin
-         $display ("AND2_32 ERROR. IN:%d, %d. OUt:%d. EXPECTED: 0", A_32, B_32, AND2_32_OUT);
-      end
-      if (MUX2_1_OUT != 5) //wrong change it back...
-      begin
-         $display ("MUX2_1 ERROR. IN:%d, %d, %d. OUt:%d. EXPECTED: 0", A_1, B_1, Sel_0, MUX2_1_OUT);
-      end
+  
+  //LOGIC GATES
 
-      #1 $display("simulation complete.");
-      $finish; 
+  //32-bit logic gate out  
+  wire[31: 0] AND2_32_OUT;
+  wire[31: 0] OR2_32_OUT;
+  wire[31:0] NOT_32_OUT;
+  wire[31:0] MUX_32_OUT;
+
+
+  //5-bit logic gate out
+  wire[4: 0] AND2_5_OUT;
+  wire[4: 0] OR2_5_OUT;
+  wire[4: 0] NOT_5_OUT;
+
+  AND2_n #(32) AND2_32(AND2_32_OUT, A_32, B_32);
+  OR2_n #(32)  OR2_32(OR2_32_OUT, A_32, B_32);
+  NOT_n #(32) NOT_32(NOT_32_OUT, A_32);
+  MUX2_n #(32) MUX2_32(MUX_32_OUT, A_32, B_32, Sel);
+ 
+  AND2_n #(5) AND2_5(AND2_5_OUT, A_5, B_5);
+  OR2_n #(5)  OR2_5(OR2_5_OUT, A_5, B_5);
+  NOT_n #(5) NOT_5(NOT_5_OUT, A_5);
+
+  initial
+  begin
+   
+    //Use for debug...
+    //FIXME_TODO: Look into a way to turn this off/on from cmd line?
+    $monitor({"@%d: \n", 
+              "A_32 = %h, B_32 = %h. \nAND2_32_OUT = %h, OR2_32_OUT = %h, NOT_32_OUT = %h. \n",  
+              "A_5 is %h, B_5 = %h, AND2_5_OUT = %h, OR2_5_OUT = %h, NOT_5_OUT = %h \n",
+              "Sel = %h, MUX2_32_OUT = %h \n\n"},  
+              
+              cycle, A_32, B_32, AND2_32_OUT, OR2_32_OUT, NOT_32_OUT,
+              A_5, B_5, AND2_5_OUT, OR2_5_OUT, NOT_5_OUT,
+              Sel, MUX_32_OUT);
+
+
+    #1 cycle <= 0;
+       A_32 <= 32'h00_00_00_11; B_32 <= 32'h00_00_00_00;  
+       A_5 <= 5'b1_1111; B_5 <= 5'b1_1111; 
+       Sel <= 0;
    end
+
+   //Add more tests.
 endmodule
