@@ -1,0 +1,15 @@
+##### Ignore these files in the Git version control #####
+##### (Partially stolen from https://github.com/wsong83/Asynchronous-Verilog-Synthesiser/blob/master/.gitignore)
+
+*.o
+
+## Compiler result
+bin/*
+
+## Other
+*.pdf
+*.sdfg
+*.datapath
+*.rrg
+*~
+*.bak
