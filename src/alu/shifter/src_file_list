@@ -1,0 +1,8 @@
+shifter.v
+shifter_tb.v
+../../std_gate_lib/mux2_n.v
+../../std_gate_lib/and2_n.v
+../../std_gate_lib/or2_n.v
+../../std_gate_lib/mux3_n.v
+../../std_gate_lib/not_n.v
+

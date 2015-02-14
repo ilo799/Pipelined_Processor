@@ -12,7 +12,7 @@ module MUX2_n #(parameter  n=32) (F,A,B, Sel);
 
   not (Not_Sel, Sel);
   //check if this is synth?
-  AND2_n #(32) AND0(Wire1, A, {n{Not_Sel}});
-  AND2_n #(32) AND1(Wire2, B, {n{Sel}});
-  OR2_n #(32)  OR2_32(F, Wire1, Wire2);
+  AND2_n #(n) AND0(Wire1, A, {n{Not_Sel}});
+  AND2_n #(n) AND1(Wire2, B, {n{Sel}});
+  OR2_n #(n)  OR2_32(F, Wire1, Wire2);
 endmodule  
