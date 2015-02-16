@@ -136,6 +136,11 @@ module Testbench;
         $display("ERROR(BranchCond): OpCode: %h, Function: %h, expected %b, got %b", OpCode, Function, BranchConds[i], BranchCond);
       end
 
+      if (FPSrc != FPSrcs[i])
+      begin
+        $display("ERROR(FPSrc): OpCode: %h, Function: %h, expected %b, got %b", OpCode, Function, FPSrcs[i], FPSrc);
+      end
+
       if (ALUOp != ALUOps[i])
       begin
         $display("ERROR(ALUOp): OpCode: %h, Function: %h, expected %b, got %b", OpCode, Function, ALUOps[i], ALUOp);

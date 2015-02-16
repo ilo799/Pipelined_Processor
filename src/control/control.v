@@ -65,8 +65,8 @@ module Control(
 
   // FPDest
   assign FPDest = (OpCode == 6'h00 & (Function == 6'h32 | Function == 6'h33 | Function == 6'h35))
-    | (OpCode == 6'h01 & ((Function >= 6'h00 & Function <= 6'h08) | (Function == 6'h0a) | (Function == 6'h0c) | (Function == 6'h0d)))
-    | (OpCode == 6'h01 & ((Function >= 6'h10 & Function <= 6'h15) | (Function >= 6'h18 & Function <= 6'h1d)))
+    | (OpCode == 6'h01 & ((Function >= 6'h00 & Function <= 6'h08) | (Function == 6'h0a) | (Function >= 6'h0c & Function <= 6'h0f)))
+    | (OpCode == 6'h01 & (Function == 6'h16 | Function == 6'h17))
     | (OpCode == 6'h26 | OpCode == 6'h27);
 
   // RegDest
@@ -101,7 +101,7 @@ module Control(
   // 0 - GPR
   // 1 - FPR
   assign FPSrc = (OpCode == 6'h00 & (Function >= 6'h32 & Function <= 6'h34))
-    | (OpCode == 6'h01 & ((Function >= 6'h00 & Function <= 6'h0b)|(Function >= 6'h10 & Function <= 6'h15)|(Function >= 6'h18 & Function <= 6'h1d)))
+    | (OpCode == 6'h01 & ((Function >= 6'h00 & Function <= 6'h0b)|(Function >= 6'h0e & Function <= 6'h1d)|(Function >= 6'h18 & Function <= 6'h1d)))
     | (OpCode == 6'h2e) | (OpCode == 6'h2f);
 
   // ALUOp
