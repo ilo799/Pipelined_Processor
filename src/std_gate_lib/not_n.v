@@ -3,8 +3,8 @@
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
 module NOT_n #(parameter  n=32) (F, A);
-  input [n-1: 0] A; 
-  output[n-1: 0] F;
+  input [0 : n-1] A; 
+  output[0 : n-1] F;
   genvar i;
   generate
     for(i = 0; i < n; i = i+1)

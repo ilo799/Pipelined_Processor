@@ -13,3 +13,4 @@ bin/*
 *.rrg
 *~
 *.bak
+.DS_Store

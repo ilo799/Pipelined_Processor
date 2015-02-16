@@ -5,12 +5,12 @@
 //B=01
 //C=1X
 module MUX3_n #(parameter  n=32) (F,A,B,C,Sel);
-  input [n-1: 0] A, B, C;
-  input  [1:0] Sel;
-  output [n-1: 0] F;
-  wire [n-1: 0] Wire1;
+  input [0 : n-1] A, B, C;
+  input [0:1] Sel;
+  output [0 : n-1] F;
+  wire [0 : n-1] Wire1;
 
-  MUX2_n #(n) MUX2_32_1(Wire1, A, B, Sel[0]);
-  MUX2_n #(n) MUX2_32_2(F, Wire1, C, Sel[1]);
+  MUX2_n #(n) MUX2_32_1(Wire1, A, B, Sel[1]);
+  MUX2_n #(n) MUX2_32_2(F, Wire1, C, Sel[0]);
 
 endmodule  

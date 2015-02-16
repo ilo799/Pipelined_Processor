@@ -3,8 +3,8 @@
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
 module OR2_n #(parameter  n=32) (F, A, B);
-  input [n-1: 0] A, B; 
-  output[n-1: 0] F;
+  input [0 : n-1] A, B; 
+  output[0 : n-1] F;
 
   genvar i;
   generate
