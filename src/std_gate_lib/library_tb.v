@@ -4,26 +4,26 @@
 
 module Testbench;
 
-  reg[0:0] cycle, Sel;
+  reg cycle, Sel;
   //32-bit input
-  reg[31: 0] A_32, B_32;
+  reg[0:31] A_32, B_32;
   //5-bit input
-  reg[4: 0] A_5, B_5;
+  reg[0:4] A_5, B_5;
    
   
   //LOGIC GATES
 
   //32-bit logic gate out  
-  wire[31: 0] AND2_32_OUT;
-  wire[31: 0] OR2_32_OUT;
-  wire[31:0] NOT_32_OUT;
-  wire[31:0] MUX_32_OUT;
+  wire[0:31] AND2_32_OUT;
+  wire[0:31] OR2_32_OUT;
+  wire[0:31] NOT_32_OUT;
+  wire[0:31] MUX_32_OUT;
 
 
   //5-bit logic gate out
-  wire[4: 0] AND2_5_OUT;
-  wire[4: 0] OR2_5_OUT;
-  wire[4: 0] NOT_5_OUT;
+  wire[0:4] AND2_5_OUT;
+  wire[0:4] OR2_5_OUT;
+  wire[0:4] NOT_5_OUT;
 
   AND2_n #(32) AND2_32(AND2_32_OUT, A_32, B_32);
   OR2_n #(32)  OR2_32(OR2_32_OUT, A_32, B_32);

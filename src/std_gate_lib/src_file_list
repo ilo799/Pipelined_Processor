@@ -1,0 +1,6 @@
+or2_n.v
+not_n.v
+and2_n.v
+mux2_n.v
+mux3_n.v
+library_tb.v
