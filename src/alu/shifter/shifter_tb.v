@@ -36,9 +36,9 @@ module Testbench;
   
     Shamt <= 5'd0;
   
-    repeat(300) begin
-      #1 A_32 <= -200; //Test w/ pos and neg
-      repeat (32) begin //Test all shifts from 0-32
+    repeat(200) begin
+      #1 A_32 <= -100; //Test w/ pos and neg
+      repeat (31) begin //Test all shifts from 0-32
         if (SHIFT_LL !== SLL) begin
           $display ("Error SLL Mismatch: In =%b, shamt =%d, SLL =%b, SHIFT_LL =%b", A_32, Shamt, SLL, SHIFT_LL);
         end
