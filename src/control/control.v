@@ -150,16 +150,19 @@ module Control(
 
   // ExtImm
   // ------
-  // 0 - Sign
-  // 1 - Zero
+  // 0 - Zero
+  // 1 - Sign
   assign ExtImm = (OpCode == 6'h09) | (OpCode == 6'h0b);
 
   // MEMSize
-  // 00 - Word
+  // 00 - Byte
   // 01 - Half-word
-  // 10 - Byte
-  assign MEMSize[0] = (OpCode == 6'h20) | (OpCode == 6'h24) | (OpCode == 6'h28);
-  assign MEMSize[1] = (OpCode == 6'h21) | (OpCode == 6'h25) | (OpCode == 6'h29);
+  // 11 - Word
+  assign MEMSize[0] = (OpCode == 6'h23) | (OpCode == 6'h26) | (OpCode == 6'h27)
+    | (OpCode == 6'h2b) | (OpCode == 6'h2e) | (OpCode == 6'h2f);
+  assign MEMSize[1] = (OpCode == 6'h21) | (OpCode == 6'h23) | (OpCode == 6'h25)
+    | (OpCode == 6'h26) | (OpCode == 6'h27) | (OpCode == 6'h29)
+    | (OpCode == 6'h2b) | (OpCode == 6'h2e) | (OpCode == 6'h2f);
 
   // MEMWE
   assign MEMWE = (OpCode >= 6'h28 & OpCode <= 6'h2f);
@@ -167,5 +170,5 @@ module Control(
   // ExtMEM
   // 0 - Sign
   // 1 - Zero
-  assign ExtMEM = (OpCode == 6'h24) | (OpCode == 6'h25);
+  assign ExtMEM = (OpCode != 6'h24) & (OpCode != 6'h25);
 endmodule
