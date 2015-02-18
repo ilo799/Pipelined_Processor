@@ -8,7 +8,8 @@ module Processor (clk, reset);
 
   // Control Signals
   wire [0:1] DInSrc;
-  wire RegWE, FPDest, RegDest;
+  wire RegWE, FPDest;
+  wire [0:1] RegDest;
   wire [0:1] JumpType;
   wire CondSrc, BranchCond;
   wire FPSrc;
@@ -21,7 +22,7 @@ module Processor (clk, reset);
 
   // Instruction Signals
   wire [0:5] OpCode, Function;
-  wire [0:31] PCPlusFour;
+  wire [0:31] PCPlusEight;
   wire [0:4] Rs1, Rs2, Rd;
   wire [0:15] Immediate;
   wire [0:31] jump_reg;
@@ -57,7 +58,7 @@ module Processor (clk, reset);
   InstructionFetch #(.MemFile(InstructionFile)) ifetch (
     .OpCode(OpCode),
     .Function(Function),
-    .PCPlusFour(PCPlusFour),
+    .PCPlusEight(PCPlusEight),
     .Rs1(Rs1),
     .Rs2(Rs2),
     .Rd(Rd),
@@ -101,7 +102,7 @@ module Processor (clk, reset);
 
   MUX4_n #(32) reg_din_mux (
     .F(reg_din),
-    .A(PCPlusFour),
+    .A(PCPlusEight),
     .B(ALUOut),
     .C(FPUOut),
     .D(MEMDout),
@@ -109,7 +110,7 @@ module Processor (clk, reset);
   );
   assign reg_a_addr = {FPSrc, Rs1};
   assign reg_b_addr = {FPSrc, Rs2};
-  MUX2_n #(6) reg_w_mux (reg_w_addr, {FPDest, Rs2}, {FPDest, Rd}, RegDest);
+  MUX3_n #(6) reg_w_mux (reg_w_addr, {FPDest, Rs2}, {FPDest, Rd}, 6'd31, RegDest);
 
   regfile64by32bit regfile (
     .clk(clk),

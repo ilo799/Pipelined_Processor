@@ -8,7 +8,7 @@ module Testbench;
   reg [0:1] DInSrcs[0:91];
   reg RegWEs[0:91];
   reg FPDests[0:91];
-  reg RegDests[0:91];
+  reg [0:1] RegDests[0:91];
   reg [0:1] JumpTypes[0:91];
   reg CondSrcs[0:91];
   reg BranchConds[0:91];
@@ -30,7 +30,8 @@ module Testbench;
 
   // WB Control
   wire [0:1] DInSrc;
-  wire RegWE, FPDest, RegDest;
+  wire RegWE, FPDest;
+  wire [0:1] RegDest;
 
   // IFetch Control
   wire [0:1] JumpType;

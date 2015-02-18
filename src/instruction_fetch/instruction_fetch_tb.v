@@ -5,14 +5,14 @@ module Testbench;
   reg [0:31] JumpReg, IAR, ALUOut, FPSR;
 
   wire [0:5] OpCode, Function;
-  wire [0:31] PCPlusFour;
+  wire [0:31] PCPlusEight;
   wire [0:4] Rs1, Rs2, Rd;
   wire [0:15] Immediate;
 
   InstructionFetch ifetch(
     .OpCode(OpCode),
     .Function(Function),
-    .PCPlusFour(PCPlusFour),
+    .PCPlusEight(PCPlusEight),
     .Rs1(Rs1),
     .Rs2(Rs2),
     .Rd(Rd),

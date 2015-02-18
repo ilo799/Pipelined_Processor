@@ -14,7 +14,8 @@ module Control(
 
   // WB Control
   output [0:1] DInSrc;
-  output RegWE, FPDest, RegDest;
+  output RegWE, FPDest;
+  output [0:1] RegDest;
 
   // IFetch Control
   output [0:1] JumpType;
@@ -71,9 +72,11 @@ module Control(
 
   // RegDest
   // -------
-  // 1 - Rd  (R-type)
-  // 0 - Rs2 (I-type)
-  assign RegDest = RType;
+  // 00 - Rs2 (I-type)
+  // 01 - Rd  (R-type)
+  // 10 - 0x31 (for JAL)
+  assign RegDest[0] = (OpCode == 6'h03) | (OpCode == 6'h13);
+  assign RegDest[1] = RType;
 
   // JumpType
   // --------
