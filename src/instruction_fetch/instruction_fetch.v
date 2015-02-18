@@ -1,0 +1,99 @@
+module InstructionFetch(
+  OpCode, Function, PCPlusFour,
+  clk, reset,
+  JumpType, BranchCond, CondSrc, ALUOut, FPSR, JumpReg, IAR
+);
+
+  parameter InitAddress = 0;
+  parameter MemFile = "../../inputs/instr.hex";
+
+  input clk, reset;
+  input [0:1] JumpType;
+  input BranchCond, CondSrc;
+  input [0:31] ALUOut, FPSR, JumpReg, IAR;
+
+  output [0:5] OpCode, Function;
+  output [0:31] PCPlusFour;
+
+  reg [0:31] PC;
+  wire [0:31] inst, next_pc, pc_plus_4, imm16, imm26, jump_pc;
+  wire [0:5] op_code, fn, alu_function, fpu_function;
+  wire should_jump, should_jump1, should_jump2, should_jump3, eq_j, eq_jr, eq_jal, eq_jalr;
+  wire should_branch, branch_inst, branch_val, branch_inst1;
+
+  // TODO: use adder
+  // assign pc_plus_4 = PC + 4;
+  LCU32bit pc_adder(
+    .inA(PC),
+    .inB(4),
+    .sum(pc_plus_4),
+    .c0(0)
+  );
+  assign PCPlusFour = pc_plus_4;
+
+  assign OpCode = op_code;
+  assign Function = fn;
+
+  imem imem(.addr(PC), .instr(inst));
+
+  assign op_code = inst[0:5];
+
+  assign alu_function = inst[26:31];
+  assign fpu_function = {1'b0, inst[27:31]};
+
+  assign imm16[16:31] = inst[16:31];
+  assign imm16[0:15] = imm16[16];
+  assign imm26[6:31] = inst[6:31];
+  assign imm26[0:5] = imm16[6];
+
+  MUX2_n #(6) fn_mux (
+    .F(fn),
+    .A(alu_function),
+    .B(fpu_function),
+    .Sel(op_code[5])
+  );
+
+  MUX4_n #(32) jump_pc_mux (
+    .F(jump_pc),
+    .A(JumpReg),
+    .B(imm16),
+    .C(imm26),
+    .D(IAR),
+    .Sel(JumpType)
+  );
+
+  MUX2_n #(32) next_pc_mux (
+    .F(next_pc),
+    .A(pc_plus_4),
+    .B(jump_pc),
+    .Sel(should_jump)
+  );
+
+  EQ2_n #(6) j_eq(eq_j, OpCode, 6'h02);
+  EQ2_n #(6) jal_eq(eq_jal, OpCode, 6'h03);
+  EQ2_n #(6) jr_eq(eq_jr, OpCode, 6'h12);
+  EQ2_n #(6) jalr_eq(eq_jalr, OpCode, 6'h13);
+
+  EQ2_n #(3) branch_eq1(branch_inst1, op_code[0:2], 0);
+  AND2_n #(1) branch_inst_and(branch_inst, branch_inst1, op_code[3]);
+  MUX2_n #(1) branch_val_mux(branch_val, FPSR[31], ALUOut[31], CondSrc);
+  AND2_n #(1) should_branch_and(should_branch, branch_inst, branch_val);
+
+  OR2_n #(1) should_jump1_or(should_jump1, eq_j, eq_jal);
+  OR2_n #(1) should_jump2_or(should_jump2, eq_jr, eq_jalr);
+  OR2_n #(1) should_jump3_or(should_jump3, should_jump1, should_jump2);
+  OR2_n #(1) should_jump_or(should_jump, should_jump3, should_branch);
+
+  initial begin
+    $readmemh(MemFile, imem.mem);
+  end
+
+  always @(posedge clk, reset) begin
+    if (reset) begin
+      PC <= InitAddress;
+    end else begin
+      PC <= next_pc;
+    end
+  end
+
+endmodule
