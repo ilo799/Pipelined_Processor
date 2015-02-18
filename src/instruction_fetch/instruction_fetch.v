@@ -1,5 +1,6 @@
 module InstructionFetch(
   OpCode, Function, PCPlusFour,
+  Rs1, Rs2, Rd, Immediate,
   clk, reset,
   JumpType, BranchCond, CondSrc, ALUOut, FPSR, JumpReg, IAR
 );
@@ -14,6 +15,8 @@ module InstructionFetch(
 
   output [0:5] OpCode, Function;
   output [0:31] PCPlusFour;
+  output [0:4] Rs1, Rs2, Rd;
+  output [0:15] Immediate;
 
   reg [0:31] PC;
   wire [0:31] inst, next_pc, pc_plus_4, imm16, imm26, jump_pc;
@@ -45,6 +48,11 @@ module InstructionFetch(
   assign imm16[0:15] = imm16[16];
   assign imm26[6:31] = inst[6:31];
   assign imm26[0:5] = imm16[6];
+
+  assign Rs1 = inst[6:10];
+  assign Rs2 = inst[11:15];
+  assign Rd = inst[16:20];
+  assign Immediate = inst[16:31];
 
   MUX2_n #(6) fn_mux (
     .F(fn),

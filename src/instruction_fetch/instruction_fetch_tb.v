@@ -6,11 +6,17 @@ module Testbench;
 
   wire [0:5] OpCode, Function;
   wire [0:31] PCPlusFour;
+  wire [0:4] Rs1, Rs2, Rd;
+  wire [0:15] Immediate;
 
   InstructionFetch ifetch(
     .OpCode(OpCode),
     .Function(Function),
     .PCPlusFour(PCPlusFour),
+    .Rs1(Rs1),
+    .Rs2(Rs2),
+    .Rd(Rd),
+    .Immediate(Immediate),
     .clk(clk),
     .reset(reset),
     .JumpType(JumpType),
@@ -26,8 +32,8 @@ module Testbench;
     $dumpfile("ifetch.vcd");
     $dumpvars;
 
-    $display("PC\tOp\tFn");
-    $monitor("%h\t%h\t%h", ifetch.PC, OpCode, Function);
+    $display("PC\t\tOp\tFn\tRs1\tRs2\tRd\tImm");
+    $monitor("%h\t%h\t%h\t%h\t%h\t%h\t%h", ifetch.PC, OpCode, Function, Rs1, Rs2, Rd, Immediate);
 
     clk = 0;
     JumpType = 0;
