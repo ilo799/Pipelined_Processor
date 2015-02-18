@@ -9,5 +9,5 @@ module imem(addr, instr);
     wire [0:31] phys_addr;
 
     assign phys_addr = addr - OFFSET;
-    assign instr = {mem[phys_addr+3],mem[phys_addr+2],mem[phys_addr+1],mem[phys_addr]};
+    assign instr = {mem[phys_addr],mem[phys_addr+1],mem[phys_addr+2],mem[phys_addr+3]};
 endmodule // imem
