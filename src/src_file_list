@@ -16,10 +16,13 @@ fpu/fpu.v
 
 alu/shifter/shifter.v
 alu/adder/32_cla_adder.v 
+alu/alu.v
 
+std_gate_lib/mux4_n.v
+std_gate_lib/mux3_n.v
 std_gate_lib/mux2_n.v
 std_gate_lib/and2_n.v
 std_gate_lib/or2_n.v
-std_gate_lib/mux3_n.v
+std_gate_lib/xor2_n.v
 std_gate_lib/not_n.v
-
+std_gate_lib/eq2_n.v
