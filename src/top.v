@@ -7,7 +7,8 @@ module Processor (clk, reset);
 
   // Control Signals
   wire [0:1] DInSrc;
-  wire RegWE, FPDest, RegDest;
+  wire RegWE, FPDest;
+  wire [0:1] RegDest;
   wire [0:1] JumpType;
   wire CondSrc, BranchCond;
   wire FPSrc;
@@ -108,7 +109,7 @@ module Processor (clk, reset);
   );
   assign reg_a_addr = {FPSrc, Rs1};
   assign reg_b_addr = {FPSrc, Rs2};
-  MUX2_n #(6) reg_w_mux (reg_w_addr, {FPDest, Rs2}, {FPDest, Rd}, RegDest);
+  MUX3_n #(6) reg_w_mux (reg_w_addr, {FPDest, Rs2}, {FPDest, Rd}, 6'd31, RegDest);
 
   regfile64by32bit regfile (
     .clk(clk),
