@@ -12,7 +12,7 @@ module regfile64by32bit(clk, regwe, reset, Rw, Ra, Rb, Din, regout1, regout2);
     assign regout2 = regfile[Rb];
 
     integer i;
-    always @(posedge clk) begin
+    always @(posedge clk, posedge reset) begin
         if (reset) begin
             for (i=0; i<63; i=i+1) begin
                 regfile[i] <= 0;
