@@ -43,7 +43,7 @@ module Processor (clk, reset);
   wire [0:31] RegAOut, RegBOut, reg_din;
   wire [0:5] reg_a_addr, reg_b_addr, reg_w_addr;
 
-  MUX2_n #(16) sext_mux (sext_immd[0:15], 1'b0, {16{Immediate[0]}}, ExtImm);
+  MUX2_n #(16) sext_mux (sext_immd[0:15], 16'b0, {16{Immediate[0]}}, ExtImm);
   assign sext_immd[16:31] = Immediate;
 
   assign alu_a = RegAOut;

@@ -24,6 +24,8 @@ module InstructionFetch(
   wire should_jump, should_jump1, should_jump2, should_jump3, eq_j, eq_jr, eq_jal, eq_jalr;
   wire should_branch, branch_inst, branch_val, branch_inst1;
 
+  wire should_branch_eqz, should_branch_neq, branch_eqz_inst;
+
   LCU32bit pc_adder(
     .inA(PC),
     .inB(4),
@@ -47,10 +49,10 @@ module InstructionFetch(
   assign alu_function = inst[26:31];
   assign fpu_function = {1'b0, inst[27:31]};
 
-  assign imm16[16:31] = inst[16:31];
-  assign imm16[0:15] = imm16[16];
-  assign imm26[6:31] = inst[6:31];
-  assign imm26[0:5] = imm16[6];
+  assign imm16 = {{16{inst[16]}},inst[16:31]};
+  assign imm26 = {{8{inst[6]}},inst[6:31]};
+
+
   LCU32bit imm16_adder(
     .inA(pc_plus_4),
     .inB(imm16),
@@ -99,8 +101,12 @@ module InstructionFetch(
 
   EQ2_n #(3) branch_eq1(branch_inst1, op_code[0:2], 0);
   AND2_n #(1) branch_inst_and(branch_inst, branch_inst1, op_code[3]);
+  AND2_n #(1) branch_eqz_inst_and(branch_eqz_inst, branch_inst, !op_code[5]);
+
   MUX2_n #(1) branch_val_mux(branch_val, FPSR[31], ALUOut[31], CondSrc);
-  AND2_n #(1) should_branch_and(should_branch, branch_inst, branch_val);
+  AND2_n #(1) should_branch_eqz_and(should_branch_eqz, branch_eqz_inst, !branch_val);
+  AND2_n #(1) should_branch_neq_and(should_branch_neq, !branch_eqz_inst, branch_val);
+  OR2_n #(1) should_branch_or(should_branch, should_branch_neq, should_branch_eqz);
 
   OR2_n #(1) should_jump1_or(should_jump1, eq_j, eq_jal);
   OR2_n #(1) should_jump2_or(should_jump2, eq_jr, eq_jalr);
