@@ -3,12 +3,14 @@ module Testbench;
   reg clk;
   reg reset;
 
-  Processor Processor0 (.clk(clk), .reset(reset));
+  Processor #(.InstructionFile("../class_examples/fibExample/instr.hex")) Processor0 (.clk(clk), .reset(reset));
 
   initial begin
     $dumpfile("processor.vcd");
     $dumpvars;
-    $readmemh("../inputs/data.hex", Processor0.mem.mem);
+    $readmemh("../class_examples/fibExample/data.hex", Processor0.mem.mem);
+    $display("MemWAddr\tMemDin");
+    $monitor("%h\t%h", Processor0.mem_addr, Processor0.mem_din);
     clk = 0;
     reset = 1;
     #1 reset = 0;
