@@ -30,7 +30,7 @@ module dmem(addr, wData, writeEnable, dsize, dsign, clk, rData_out, error_flag);
                  end
 		 else begin
                     //Big Endian: MSB => highest address
-                    {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]} <= wData[0:31];
+                    {mem[addr], mem[addr+1], mem[addr+2], mem[addr+3]} <= wData[0:31];
                     flag <= 1'b0;
                  end
 	      end
@@ -44,7 +44,7 @@ module dmem(addr, wData, writeEnable, dsize, dsign, clk, rData_out, error_flag);
                     flag <= 1'b1;
                  end
                  else begin
-                    {mem[addr+1], mem[addr]} <= wData[16:31];
+                    {mem[addr], mem[addr+1]} <= wData[16:31];
                     flag <= 1'b0;
                  end
               end
@@ -73,7 +73,7 @@ module dmem(addr, wData, writeEnable, dsize, dsign, clk, rData_out, error_flag);
                  end
                  else begin
                     //Big Endian: highest address => MSB
-                    rData <= {mem[addr+3], mem[addr+2], mem[addr+1], mem[addr]};
+                    rData <= {mem[addr], mem[addr+1], mem[addr+2], mem[addr+3]};
                     flag <= 1'b0;
                  end
               end
@@ -90,7 +90,7 @@ module dmem(addr, wData, writeEnable, dsize, dsign, clk, rData_out, error_flag);
                  end
                  else begin
                     if (dsign == 1) begin
-                       rData <= {{16{mem[addr+1][0]}}, mem[addr+1], mem[addr]};
+                       rData <= {{16{mem[addr][0]}}, mem[addr], mem[addr+1]};
                     end else 
                     begin
                        rData <= {{16{1'b0}}, mem[addr+1], mem[addr]};
