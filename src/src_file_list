@@ -18,6 +18,12 @@ alu/shifter/shifter.v
 alu/adder/32_cla_adder.v 
 alu/alu.v
 
+stages/decode/decode.v
+stages/execute/execute.v
+stages/fetch/fetch.v
+stages/memory/memory.v
+stages/write_back/write_back.v
+
 std_gate_lib/mux4_n.v
 std_gate_lib/mux3_n.v
 std_gate_lib/mux2_n.v
