@@ -1,20 +1,20 @@
 module InstructionFetch(
-  OpCode, Function, PCPlusEight,
+  OpCode, Function, PCPlusFour, PCPlusEight,
   Rs1, Rs2, Rd, Immediate,
-  clk, reset,
+  clk, reset, stall,
   JumpType, BranchCond, CondSrc, ALUOut, FPSR, JumpReg, IAR
 );
 
   parameter InitAddress = 0;
   parameter MemFile = "../../inputs/instr.hex";
 
-  input clk, reset;
+  input clk, reset, stall;
   input [0:1] JumpType;
   input BranchCond, CondSrc;
   input [0:31] ALUOut, FPSR, JumpReg, IAR;
 
   output [0:5] OpCode, Function;
-  output [0:31] PCPlusEight;
+  output [0:31] PCPlusFour, PCPlusEight;
   output [0:4] Rs1, Rs2, Rd;
   output [0:15] Immediate;
 
@@ -32,6 +32,8 @@ module InstructionFetch(
     .sum(pc_plus_4),
     .c0(0)
   );
+  assign PCPlusFour = pc_plus_4;
+
   LCU32bit pc8_adder(
     .inA(pc_plus_4),
     .inB(4),
@@ -120,7 +122,7 @@ module InstructionFetch(
   always @(posedge clk, posedge reset) begin
     if (reset) begin
       PC <= InitAddress;
-    end else begin
+    end else if (!stall) begin
       PC <= next_pc;
     end
   end
