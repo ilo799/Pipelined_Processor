@@ -2,7 +2,7 @@ module Decode (
   // Out
   DInSrc, RegWE, FPDest, RegDest, JumpType, CondSrc, BranchCond, 
   FPSrc, ALUOp, FPUOp, ALUCruft, ALUSrc, ExtImm, MEMSize, MEMWE, ExtMEM,
-  Rd, RegOut1, RegOut2, Opcode, Funct, PC_plus_four, Immediate,  
+  Rd, RegOut1, RegOut2, Opcode, Funct, PCPlusFour, Immediate,  
 
   // In
   clk, reset, stall,
@@ -45,7 +45,7 @@ module Decode (
   output [0:15] Immediate;
   output [0:31] RegOut1, RegOut2;
   output [0:4] Rd;
-  output [0:31] PC_plus_four;
+  output [0:31] PCPlusFour;
   output [0:5] OpCode, Funct;
 
   //Ifetch -> Decode Pipe Reg
@@ -86,6 +86,6 @@ module Decode (
  assign Immediate = immd;
  assign OpCode = op_code;
  assign Funct = funct;
- assign PC_plus_four = pc_plus_four;
+ assign PCPlusFour = pc_plus_four;
 
 endmodule
