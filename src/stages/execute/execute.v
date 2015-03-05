@@ -7,6 +7,7 @@ module Execute (
   NextRegB, NextDInSrc, NextRegWE, NextRegWBAddr, NextJumpType, NextCondSrc, NextBranchCond,
   NextALUOp, NextFPUOp, NextALUCruft, NextALUSrc, NextExtImm, NextMEMSize, NextMEMWE, NextExtMEM,
 );
+
   input clk, reset, stall;
   input [0:31] NextRegB;
   input [0:1] NextDInSrc;

@@ -8,9 +8,9 @@ module Decode (
   clk, reset, stall,
   RegWBWE, RegWBAddr, RegWBData,
   NextOpCode, NextFunction, NextPCPlusFour,
-  NextRs1, NextRs2, NextRd, NextImmd  
+  NextRs1, NextRs2, NextRd, NextImmd
 );
-  
+
   input clk, reset, stall;
   
   //I think this goes in WB stage
@@ -74,18 +74,18 @@ module Decode (
 
   //Register File
   regfile64by32bit regfile (.clk(clk), .regwe(RegWBWE), .reset(reset), .Rw(RegWBAddr), .Ra(rs1), .Rb(rs2), .Din(RegWBData) , .regout1(RegOut1), .regout2(RegOut2));
- 
+
   //Control Unit
   Control control(.DInSrc(DInSrc), .RegWE(RegWE), .FPDest(FPDest), .RegDest(RegDest), .JumpType(JumpType) , .CondSrc(CondSrc) , .BranchCond(BranchCond),
-  .FPSrc(FPSrc) , .ALUOp(ALUOp) , .FPUOp(FPUOp) , .ALUCruft(ALUCruft), .ALUSrc(ALUSrc), .ExtImm(ExtImm), .MEMSize(MEMSize), .MEMWE(MEMWE), .ExtMEM(ExtMEM),
-  .OpCode(op_code), .Function(fn)
-);
+    .FPSrc(FPSrc) , .ALUOp(ALUOp) , .FPUOp(FPUOp) , .ALUCruft(ALUCruft), .ALUSrc(ALUSrc), .ExtImm(ExtImm), .MEMSize(MEMSize), .MEMWE(MEMWE), .ExtMEM(ExtMEM),
+    .OpCode(op_code), .Function(fn)
+  );
 
- //Things to forward
- assign Rd = rd;
- assign Immediate = immd;
- assign OpCode = op_code;
- assign Funct = funct;
- assign PCPlusFour = pc_plus_four;
+  //Things to forward
+  assign Rd = rd;
+  assign Immediate = immd;
+  assign OpCode = op_code;
+  assign Funct = funct;
+  assign PCPlusFour = pc_plus_four;
 
 endmodule
