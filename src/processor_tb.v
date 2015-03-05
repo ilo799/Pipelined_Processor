@@ -19,4 +19,10 @@ module Testbench;
   always begin
     #1 clk <= !clk;
   end
+
+  always @(posedge clk) begin
+    if (Processor0.OpCode == 6'h11) begin
+      $finish;
+    end
+  end
 endmodule
