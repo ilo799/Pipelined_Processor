@@ -9,9 +9,16 @@ module Testbench;
     #1 clk<=0; reset<=1;
     #1 reset<=0;
 
-    repeat(100000) begin
+    $dumpfile("processor.vcd");
+    $dumpvars;
+    $readmemh("../inputs/data.hex", Processor0.mem.mem);
+    clk = 0;
+    reset = 1;
+    #1 reset = 0;
+  end
+
+  always begin
     #1 clk <= !clk;
-    end
   end
 endmodule
 
