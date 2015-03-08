@@ -1,5 +1,5 @@
 ; Linked by DLX-LD.
-.text 0x1000
+.text 0x0000
 .data 0x2000
 ; Compiled by GCC
 .global _A
