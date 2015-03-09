@@ -1,6 +1,7 @@
 module Processor (clk, reset);
   
   parameter InstructionFile = "../inputs/instr.hex";
+  parameter InstructionInitAddress = 0;
 
   input clk, reset;
 
@@ -55,7 +56,7 @@ module Processor (clk, reset);
   fpu fpu (FPUOut, fpu_a, fpu_b, FPUOp);
 
   assign jump_reg = RegAOut;
-  InstructionFetch #(.MemFile(InstructionFile)) ifetch (
+  InstructionFetch #(.MemFile(InstructionFile), .InitAddress(InstructionInitAddress)) ifetch (
     .OpCode(OpCode),
     .Function(Function),
     .PCPlusEight(PCPlusEight),
