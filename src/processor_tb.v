@@ -3,12 +3,15 @@ module Testbench;
   reg clk;
   reg reset;
 
-  Processor #(.InstructionFile("../class_examples/fibExample/instr.hex")) Processor0 (.clk(clk), .reset(reset));
+  Processor #(
+    .InstructionFile("../examples/quicksort/qsort_instr.hex"),
+    .InstructionInitAddress(0)
+  ) Processor0 (.clk(clk), .reset(reset));
 
   initial begin
     $dumpfile("processor.vcd");
     $dumpvars;
-    $readmemh("../class_examples/fibExample/data.hex", Processor0.mem.mem);
+    $readmemh("../examples/quicksort/qsort_data.hex", Processor0.mem.mem);
     $display("MemWAddr\tMemDin");
     $monitor("%h\t%h", Processor0.mem_addr, Processor0.mem_din);
     clk = 0;
