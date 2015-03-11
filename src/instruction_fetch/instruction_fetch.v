@@ -1,6 +1,9 @@
 module InstructionFetch(
-  OpCode, Function, PCPlusFour, PCPlusEight,
+  //Out
+  OpCode, Function, PCPlusFour, 
   Rs1, Rs2, Rd, Immediate,
+
+  //In
   clk, reset, stall,
   JumpType, BranchCond, CondSrc, ALUOut, FPSR, JumpReg, IAR
 );
@@ -14,7 +17,7 @@ module InstructionFetch(
   input [0:31] ALUOut, FPSR, JumpReg, IAR;
 
   output [0:5] OpCode, Function;
-  output [0:31] PCPlusFour, PCPlusEight;
+  output [0:31] PCPlusFour;
   output [0:4] Rs1, Rs2, Rd;
   output [0:15] Immediate;
 
@@ -30,17 +33,9 @@ module InstructionFetch(
     .inA(PC),
     .inB(4),
     .sum(pc_plus_4),
-    .c0(0)
+    .c0(1'b0)
   );
   assign PCPlusFour = pc_plus_4;
-
-  LCU32bit pc8_adder(
-    .inA(pc_plus_4),
-    .inB(4),
-    .sum(PCPlusEight),
-    .c0(0)
-  );
-
   assign OpCode = op_code;
   assign Function = fn;
 
@@ -59,13 +54,13 @@ module InstructionFetch(
     .inA(pc_plus_4),
     .inB(imm16),
     .sum(imm16_plus_pc4),
-    .c0(0)
+    .c0(1'b0)
   );
   LCU32bit imm26_adder(
     .inA(pc_plus_4),
     .inB(imm26),
     .sum(imm26_plus_pc4),
-    .c0(0)
+    .c0(1'b0)
   );
 
   assign Rs1 = inst[6:10];
@@ -101,7 +96,7 @@ module InstructionFetch(
   EQ2_n #(6) jr_eq(eq_jr, OpCode, 6'h12);
   EQ2_n #(6) jalr_eq(eq_jalr, OpCode, 6'h13);
 
-  EQ2_n #(3) branch_eq1(branch_inst1, op_code[0:2], 0);
+  EQ2_n #(3) branch_eq1(branch_inst1, op_code[0:2], 3'b0);
   AND2_n #(1) branch_inst_and(branch_inst, branch_inst1, op_code[3]);
   AND2_n #(1) branch_eqz_inst_and(branch_eqz_inst, branch_inst, !op_code[5]);
 
@@ -126,5 +121,4 @@ module InstructionFetch(
       PC <= next_pc;
     end
   end
-
 endmodule

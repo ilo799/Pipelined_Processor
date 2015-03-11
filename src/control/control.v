@@ -118,9 +118,9 @@ module Control(
   // 110 - SLT/SGE
   // 111 - SGT/SLE
 
-  // ADD/SUB/SEQ/SNE/SLT/SGE/SGT/SLE
+  // ADD/LW/SUB/SEQ/SNE/SLT/SGE/SGT/SLE
   assign ALUOp[0] = (OpCode == 6'h00 & ((Function >= 6'h20 & Function <= 6'h23) | (Function >= 6'h28 & Function <= 6'h2d) | (Function == 6'h35)))
-    | (OpCode >= 6'h08 & OpCode <= 6'h0b) | (OpCode == 6'h0f) | (OpCode >= 6'h18 & OpCode <= 6'h1d);
+    | (OpCode >= 6'h08 & OpCode <= 6'h0b) | (OpCode == 6'h0f) | (OpCode >= 6'h18 & OpCode <= 6'h1d) | OpCode == 6'h23;
 
   // OR/XOR/LT/GT/LTE/GTE
   assign ALUOp[1] = (OpCode == 6'h00 & (Function == 6'h25 | Function == 6'h26 | (Function >= 6'h2a & Function <= 6'h2d)))
