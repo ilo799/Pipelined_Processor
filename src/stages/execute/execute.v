@@ -141,7 +141,7 @@ module Execute (
 
   wire[0:31] alu_immd, alu_a, alu_b, fpu_a, fpu_b;
 
-  MUX2_n #(16) ext_mux (alu_immd[0:15], 16'b0, {16{immediate[0]}}, ext_immd);
+  MUX2_n #(16) ext_mux (alu_immd[0:15], 16'b0, {16{immediate[0]}}, ext_imm);
   assign alu_immd[16:31] = immediate;
   MUX4_n #(32) alu_a_mux (alu_a, reg_a, 32'bX, MemData, WBData, ASrc);
   MUX4_n #(32) alu_b_mux (alu_b, reg_b, alu_immd, MemData, WBData, BSrc);

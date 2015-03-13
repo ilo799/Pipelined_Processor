@@ -44,16 +44,16 @@ module Fetch (
   assign rs1 = {fp_src, Rs1};
   assign rs2 = {fp_src, Rs2};
 
-  wire load_bubble, branch_bubble;
+  wire load_bubble, branch_bubble, jr_bubble;
 
-  hazard hazard0 (.decode_rd(DecodeRd), .fetch_op(op_code), .fetch_pc_plus_4(PCPlusFour), .fetch_rs1(rs1), .fetch_rs2(rs2), .decode_pc_plus_4(DecodePCPlusFour), 
-                  .load_bubble(load_bubble), .branch_bubble(branch_bubble));
+  //Add .decode_op from decode stage.. 
+  hazard hazard0 (.decode_rd(DecodeRd), .fetch_op(op_code), .fetch_pc_plus_4(PCPlusFour), .fetch_rs1(rs1), .fetch_rs2(rs2), .decode_pc_plus_4(DecodePCPlusFour), .load_bubble(load_bubble), .branch_bubble(branch_bubble), .jr_bubble(jr_bubble));
 
     wire pc_stall;
-    assign pc_stall = branch_bubble | load_bubble;
+    assign pc_stall = branch_bubble | load_bubble | jr_bubble;
 
-   MUX2_n #(6) mux1(OpCode, op_code, 6'h00, pc_stall);
-   MUX2_n #(6) mux2(Function, funct, 6'h15, pc_stall);
+   MUX2_n #(6) mux1(OpCode, op_code, 6'h00, load_bubble);
+   MUX2_n #(6) mux2(Function, funct, 6'h15, load_bubble);
 
 
   InstructionFetch #(.MemFile(MemFile), .InitAddress(InitAddress))  ifetch(

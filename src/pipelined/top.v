@@ -39,8 +39,6 @@ module Processor (clk, reset);
   wire[0:31] decode_pc_plus_four; 
 
 
-  assign jump_reg_df = reg_out1_de; //rs1 
-
   //Exe -> Mem
   wire reg_we_em;
   wire[0:5] reg_w_addr_em;
@@ -78,7 +76,7 @@ module Processor (clk, reset);
 
   //Stages
 
- 
+  MUX4_n #(32) jump_reg_mux(jump_reg_df, reg_out1_de, 32'bX, alu_out_mw, reg_w_data_wd, dec_src);  
   Fetch  #(.MemFile(InstructionFile), .InitAddress(InitAddr))  ifetch(
   //Out:
   .OpCode(opcode_fd), .Function(function_fd), .PCPlusFour(pc_plus_four_fd), 
