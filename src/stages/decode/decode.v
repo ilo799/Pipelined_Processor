@@ -12,6 +12,7 @@ module Decode (
   clk, reset, stall,
   RegWBWE, RegWBAddr, RegWBData, //From WB
   NextOpCode, NextFunct, NextPCPlusFour, //FROM IF
+  BranchSrc, MemData, WBData,
   NextRs1, NextRs2, NextRd, NextImmd  
 );
   
@@ -26,7 +27,11 @@ module Decode (
   input [0:31] NextPCPlusFour;
   input [0:5] NextOpCode, NextFunct;
   input [0:4] NextRs1, NextRs2, NextRd;
-  input [0:15] NextImmd; 
+  input [0:15] NextImmd;
+
+  //Forwarded inputs
+  input [0:1] BranchSrc;
+  input [0:31] MemData, WBData;
 
   // Control For WB
   output RegWE;
@@ -90,7 +95,8 @@ module Decode (
   end
 
   //Ifetch
-  assign BranchResult = RegOut1[31]; //FIXME_TODO: check all bits 
+  MUX4_n #(1) branch_res_mux(BranchResult, RegOut1[31], 1'bX, MemData[31], WBData[31], BranchSrc); // FIXME_TODO: check all bits
+
   assign DecodeRd = RegWAddr;
   assign DecodePCPlusFour = pc_plus_four; 
 

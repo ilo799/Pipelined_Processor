@@ -66,6 +66,9 @@ module Processor (clk, reset);
   wire [0:5] reg_w_addr_wd;
   wire [0:31] reg_w_data_wd;
 
+  // DEC Forwarding
+  wire [0:1] dec_src;
+
 	// EXE Forwarding
 	wire [0:1] exe_a_src, exe_b_src;
 
@@ -101,6 +104,7 @@ module Processor (clk, reset);
   .clk(clk), .reset(reset), .stall(stall),
   .RegWBWE(reg_we_wd), .RegWBAddr(reg_w_addr_wd), .RegWBData(reg_w_data_wd), //From WB
   .NextOpCode(opcode_fd), .NextFunct(function_fd), .NextPCPlusFour(pc_plus_four_fd), //FROM IF
+  .BranchSrc(dec_src), .MemData(alu_out_mw), .WBData(reg_w_data_wd),
   .NextRs1(rs1_fd), .NextRs2(rs2_fd), .NextRd(rd_fd), .NextImmd(immediate_fd)
   );
   
@@ -153,8 +157,12 @@ module Processor (clk, reset);
 		.MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode), 
 		.MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(execute.rs1), .Rs2(execute.rs2), .ALUSrc(execute.alu_src)
 	);
-  
 
+  DECForward dec_forward(
+    .Src(dec_src),
+    .MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode),
+    .MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(rs1_de)
+  );
 
   always @(posedge reset) begin
     IAR <= 0;

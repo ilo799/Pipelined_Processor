@@ -19,6 +19,7 @@ top.v
 ../alu/alu.v
 
 ../forward/exe_forward.v
+../forward/dec_forward.v
 
 ../stages/decode/decode.v
 ../stages/execute/execute.v
