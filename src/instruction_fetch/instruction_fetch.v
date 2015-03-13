@@ -5,7 +5,7 @@ module InstructionFetch(
 
   //In
   clk, reset, stall,
-  JumpType, BranchCond, CondSrc, ALUOut, FPSR, JumpReg, IAR
+  JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR
 );
 
   parameter InitAddress = 0;
@@ -14,7 +14,8 @@ module InstructionFetch(
   input clk, reset, stall;
   input [0:1] JumpType;
   input BranchCond, CondSrc;
-  input [0:31] ALUOut, FPSR, JumpReg, IAR;
+  input [0:31]  FPSR, JumpReg, IAR;
+  input BranchResult;
 
   output [0:5] OpCode, Function;
   output [0:31] PCPlusFour;
@@ -75,13 +76,19 @@ module InstructionFetch(
     .Sel(op_code[5])
   );
 
+//hack data-forword from decode
+
+  wire [0:1] jump_type;
+  assign jump_type[0] = (op_code == 6'h10) | (op_code == 6'h11) | (op_code == 6'h02) | (op_code == 6'h03);
+  assign jump_type[1] = (op_code == 6'h10) | (op_code >= 6'h04 & op_code <= 6'h07);
+
   MUX4_n #(32) jump_pc_mux (
     .F(jump_pc),
     .A(JumpReg),
     .B(imm16_plus_pc4),
     .C(imm26_plus_pc4),
     .D(IAR),
-    .Sel(JumpType)
+    .Sel(jump_type)
   );
 
   MUX2_n #(32) next_pc_mux (
@@ -100,7 +107,7 @@ module InstructionFetch(
   AND2_n #(1) branch_inst_and(branch_inst, branch_inst1, op_code[3]);
   AND2_n #(1) branch_eqz_inst_and(branch_eqz_inst, branch_inst, !op_code[5]);
 
-  MUX2_n #(1) branch_val_mux(branch_val, FPSR[31], ALUOut[31], CondSrc);
+  MUX2_n #(1) branch_val_mux(branch_val, FPSR[31], BranchResult, CondSrc);
   AND2_n #(1) should_branch_eqz_and(should_branch_eqz, branch_eqz_inst, !branch_val);
   AND2_n #(1) should_branch_neq_and(should_branch_neq, !branch_eqz_inst, branch_val);
   OR2_n #(1) should_branch_or(should_branch, should_branch_neq, should_branch_eqz);

@@ -29,11 +29,15 @@ module Processor (clk, reset);
   wire [0:5] function_de;
   wire [0:31] pc_plus_four_de, reg_out1_de, reg_out2_de ;
   wire [0:15] immediate_de;
+  wire [0:5] rs1_de, rs2_de;
 
   //Decode -> Fetch
   wire[0:1] jump_type_df;
-  wire cond_src_df, branch_cond_df;
+  wire cond_src_df, branch_cond_df, branch_outcome_df;
   wire[0:31] jump_reg_df;
+  wire[0:5] decode_rd;
+  wire[0:31] decode_pc_plus_four; 
+
 
   assign jump_reg_df = reg_out1_de; //rs1 
 
@@ -47,10 +51,6 @@ module Processor (clk, reset);
   wire [0:5] function_em;
   wire [0:31] pc_plus_four_em, alu_out_em, fpu_out_em, reg_b_em;
   wire [0:15] immediate_em;
-
-  //Exe -> Fetch
-  wire [0:31]alu_out_ef;
-  assign alu_out_ef = alu_out_em; 
 
   //Mem -> WB
   wire reg_we_mw;
@@ -66,6 +66,8 @@ module Processor (clk, reset);
   wire [0:5] reg_w_addr_wd;
   wire [0:31] reg_w_data_wd;
 
+	// EXE Forwarding
+	wire [0:1] exe_a_src, exe_b_src;
 
   //Top Level Hazard Detection/Forwarding Logic here.
   wire stall;
@@ -81,16 +83,19 @@ module Processor (clk, reset);
  
   //In
   .clk(clk), .reset(reset), .stall(stall),
-  .JumpType(jump_type_df), .BranchCond(branch_cond_df), .CondSrc(cond_src_df), .ALUOut(alu_out_ef), .FPSR(FPSR), .JumpReg(jump_reg_df), .IAR(IAR)
-  );
+  .JumpType(jump_type_df), .BranchCond(branch_cond_df), .CondSrc(cond_src_df), .BranchResult(branch_outcome_df), .FPSR(FPSR), .JumpReg(jump_reg_df), .IAR(IAR),
+  .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four)  
+);
 
   Decode decode(
   // Out
   .RegWE(reg_we_de), .RegWAddr(reg_w_addr_de), .DInSrc(din_src_de), //WB
   .JumpType(jump_type_df), .CondSrc(cond_src_df), .BranchCond(branch_cond_df), //IF 
   .ALUOp(alu_op_de), .FPUOp(fpu_op_de), .ALUCruft(alu_cruft_de), .ALUSrc(alu_src_de), .ExtImm(ext_imm_de), //Exe 
+	.Rs1(rs1_de), .Rs2(rs2_de),
   .MEMSize(mem_size_de), .MEMWE(mem_we_de), .ExtMEM(ext_mem_de), //Mem
-  .RegOut1(reg_out1_de), .RegOut2(reg_out2_de), .OpCode(opcode_de), .Funct(function_de), .PCPlusFour(pc_plus_four_de), .Immediate(immediate_de),  //Data
+  .RegOut1(reg_out1_de), .RegOut2(reg_out2_de), .OpCode(opcode_de), .Funct(function_de), .PCPlusFour(pc_plus_four_de), .Immediate(immediate_de), .BranchResult(branch_outcome_df),   //Data
+  .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four), 
 
   // In
   .clk(clk), .reset(reset), .stall(stall),
@@ -109,8 +114,11 @@ module Processor (clk, reset);
   // In
   .clk(clk), .reset(reset), .stall(stall),
   .NextRegA(reg_out1_de), .NextRegB(reg_out2_de), .NextImmediate(immediate_de), .NextOpcode(opcode_de), .NextFunction(function_de), .NextPCPlusFour(pc_plus_four_de), //Data
+  .NextRs1(rs1_de), .NextRs2(rs2_de),
   .NextDInSrc(din_src_de), .NextRegWE(reg_we_de), .NextRegWAddr(reg_w_addr_de), //WB
   .NextALUOp(alu_op_de), .NextFPUOp(fpu_op_de), .NextALUCruft(alu_cruft_de), .NextALUSrc(alu_src_de), .NextExtImm(ext_imm_de), //EXE
+  .ASrc(exe_a_src), .BSrc(exe_b_src),
+  .MemData(alu_out_mw), .WBData(reg_w_data_wd),
   .NextMEMSize(mem_size_de), .NextMEMWE(mem_we_de), .NextExtMEM(ext_mem_de)  //MEM
   );
 
@@ -136,6 +144,16 @@ module Processor (clk, reset);
   .NextOpcode(opcode_mw), .NextFunct(function_mw), .NextPCPlusFour(pc_plus_four_mw), .NextImmediate(immediate_mw),
   .NextDInSrc(din_src_mw), .NextRegWE(reg_we_mw), .NextRegWAddr(reg_w_addr_mw)
   );
+
+  // Forwarding
+	EXEForward exe_forward(
+		// Out
+		.EXEASrc(exe_a_src), .EXEBSrc(exe_b_src),
+		// In
+		.MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode), 
+		.MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(execute.rs1), .Rs2(execute.rs2), .ALUSrc(execute.alu_src)
+	);
+  
 
 
   always @(posedge reset) begin

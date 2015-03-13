@@ -46,7 +46,7 @@ module WriteBack (
       fpu_out <= 0;
       mem_out <= 0;
       funct <= 6'b0;
-      opcode <= 6'b0;
+      opcode <= 6'h15;
       pc_plus_four <= 0;
       immediate <= 16'b0;
 

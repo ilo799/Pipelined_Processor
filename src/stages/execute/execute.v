@@ -9,6 +9,12 @@ module Execute (
   clk, reset, stall,
  
   NextRegA, NextRegB, NextImmediate, NextOpcode, NextFunction, NextPCPlusFour, //Data
+  NextRs1, NextRs2,
+
+  // Forwarding
+  ASrc, BSrc,
+  MemData, WBData,
+
   //Control
   NextDInSrc, NextRegWE, NextRegWAddr, //WB
   NextALUOp, NextFPUOp, NextALUCruft, NextALUSrc, NextExtImm, //EXE
@@ -34,6 +40,9 @@ module Execute (
   input [0:1] NextMEMSize;
   input NextMEMWE;
   input NextExtMEM;
+  input [0:5] NextRs1, NextRs2;
+  input [0:1] ASrc, BSrc;
+  input [0:31] MemData, WBData;
 
   output [0:31] ALUOut, FPUOut;
   
@@ -66,6 +75,8 @@ module Execute (
   reg mem_we;
   reg ext_mem;
 
+  reg [0:5] rs1, rs2;
+
   assign RegB = reg_b;
   assign PCPlusFour = pc_plus_four; 
   assign Funct = funct;
@@ -86,7 +97,7 @@ module Execute (
       reg_b <= 0;
       pc_plus_four <= 0;
       immediate <= 16'b0;
-      funct <= 6'b0;
+      funct <= 6'h15;
       opcode <= 6'b0;
 
       din_src <= 2'b0;
@@ -100,6 +111,9 @@ module Execute (
       mem_size <= 2'b0;
       mem_we <= 1'b0;
       ext_mem <= 1'b0;
+
+      rs1 <= 6'b0;
+      rs2 <= 6'b0;
     end else begin
       reg_a <= NextRegA;
       reg_b <= NextRegB;
@@ -119,6 +133,9 @@ module Execute (
       mem_size <= NextMEMSize;
       mem_we <= NextMEMWE;
       ext_mem <= NextExtMEM;
+
+      rs1 <= NextRs1;
+      rs2 <= NextRs2;
     end
   end
 
@@ -126,8 +143,8 @@ module Execute (
 
   MUX2_n #(16) ext_mux (alu_immd[0:15], 16'b0, {16{immediate[0]}}, ext_immd);
   assign alu_immd[16:31] = immediate;
-  assign alu_a = reg_a;
-  MUX2_n #(32) alu_b_mux (alu_b, reg_b, alu_immd, alu_src);
+  MUX4_n #(32) alu_a_mux (alu_a, reg_a, 32'bX, MemData, WBData, ASrc);
+  MUX4_n #(32) alu_b_mux (alu_b, reg_b, alu_immd, MemData, WBData, BSrc);
   ALU alu (ALUOut, alu_a, alu_b, alu_op, alu_cruft);
 
   assign fpu_a = reg_a;

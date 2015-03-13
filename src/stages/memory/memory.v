@@ -69,7 +69,7 @@ module Memory (
       alu_out <= 0;
       fpu_out <= 0;
       reg_b <= 0;
-      funct <= 6'b0;
+      funct <= 6'h15;
       opcode <= 6'b0;
       pc_plus_four <= 0;
       immediate <= 16'b0;

@@ -1,10 +1,12 @@
 module Decode (
   // Out
   RegWE, RegWAddr, DInSrc, //WB
-  JumpType, CondSrc, BranchCond, //IF 
+  JumpType, CondSrc, BranchCond, BranchResult, //IF 
   ALUOp, FPUOp, ALUCruft, ALUSrc, ExtImm, //Exe 
+	Rs1, Rs2,
   MEMSize, MEMWE, ExtMEM, //Mem
   RegOut1, RegOut2, OpCode, Funct, PCPlusFour, Immediate,  //Data
+  DecodeRd, DecodePCPlusFour,
 
   // In:
   clk, reset, stall,
@@ -34,11 +36,15 @@ module Decode (
   // Control For Ifetch
   output[0:1] JumpType; 
   output BranchCond, CondSrc;
+  output BranchResult;
+  output[0:5]  DecodeRd;
+  output[0:31] DecodePCPlusFour;
 
   // Control For Exe
   output [0:2] ALUOp, FPUOp;
   output [0:1] ALUCruft;
   output ALUSrc, ExtImm; 
+	output [0:5] Rs1, Rs2;
   
   // Control for Mem 
   output [0:1] MEMSize;
@@ -60,11 +66,13 @@ module Decode (
   reg [0:15] immd; 
   reg [0:4] rs1, rs2, rd;
 
+	assign Rs1 = reg_a_addr;
+	assign Rs2 = reg_b_addr;
 
   always @(posedge clk, posedge reset) begin
     if (reset) begin
       op_code <= 6'b0;
-      funct <= 6'b0;
+      funct <= 6'h15;
       pc_plus_four <= 0;
       immd <= 16'b0;
       rs1 <=  5'b0;
@@ -80,6 +88,12 @@ module Decode (
       rd <= NextRd;
     end
   end
+
+  //Ifetch
+  assign BranchResult = RegOut1[31]; //FIXME_TODO: check all bits 
+  assign DecodeRd = RegWAddr;
+  assign DecodePCPlusFour = pc_plus_four; 
+
 
   //Forward
   assign Immediate = immd;
