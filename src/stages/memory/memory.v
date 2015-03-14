@@ -1,6 +1,7 @@
 module Memory (
   // Out
   MEMDout, ALUOut, FPUOut, Opcode, Funct, PCPlusFour, Immediate, //Data
+  WBData,
   DInSrc, RegWE, RegWAddr , //WB Control
 
   // In
@@ -35,6 +36,7 @@ module Memory (
   output [0:5] Funct;
   output [0:5] Opcode;
   output [0:15] Immediate; 
+  output [0:31] WBData;
 
   reg [0:31] alu_out, fpu_out, reg_b;
   reg [0:5] funct;
@@ -102,5 +104,7 @@ module Memory (
   wire we;
   assign we = mem_we & !stall;
   dmem mem (.addr(alu_out),.wData(reg_b), .writeEnable(we), .dsize(mem_size),.dsign(ext_mem), .clk(clk), .rData_out(MEMDout));
+
+  MUX4_n #(32) reg_din_mux (.F(WBData),.A(pc_plus_four), .B(alu_out), .C(fpu_out), .D(32'bX), .Sel(din_src));
 
 endmodule

@@ -121,14 +121,17 @@ module Decode (
   assign reg_b_addr = {FPSrc, rs2};
   assign we = RegWBWE & !stall;
 
-  wire wb_addr_eq_rs1, wb_addr_er_rs2; 
+  wire wb_addr_eq_rs1, wb_addr_eq_rs2, forward_wb_1, forward_wb_2;
   wire[0:31] reg_out_1, reg_out_2;
 
   assign  wb_addr_eq_rs1 = (RegWBAddr == reg_a_addr);
   assign  wb_addr_eq_rs2 = (RegWBAddr == reg_b_addr);
 
-  MUX2_n #(32) reg_a_mux (RegOut1, reg_out_1,  RegWBData, wb_addr_eq_rs1);
-  MUX2_n #(32) reg_b_mux (RegOut2, reg_out_2,  RegWBData, wb_addr_eq_rs2);
+  assign forward_wb_1 = wb_addr_eq_rs1 & RegWBWE;
+  assign forward_wb_2 = wb_addr_eq_rs2 & RegWBWE;
+
+  MUX2_n #(32) reg_a_mux (RegOut1, reg_out_1,  RegWBData, forward_wb_1);
+  MUX2_n #(32) reg_b_mux (RegOut2, reg_out_2,  RegWBData, forward_wb_2);
 
   regfile64by32bit regfile (.clk(clk), .regwe(we), .reset(reset), .Rw(RegWBAddr), .Ra(reg_a_addr), .Rb(reg_b_addr), .Din(RegWBData) , .regout1(reg_out_1), .regout2(reg_out_2));
  
