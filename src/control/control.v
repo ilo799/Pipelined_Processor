@@ -155,7 +155,7 @@ module Control(
   // ------
   // 0 - Zero
   // 1 - Sign
-  assign ExtImm = (OpCode == 6'h08) | (OpCode == 6'h0a);
+  assign ExtImm = (OpCode == 6'h08) | (OpCode == 6'h0a) | (OpCode >= 6'h20 & OpCode <= 6'h2f);
 
   // MEMSize
   // 00 - Byte

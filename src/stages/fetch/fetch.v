@@ -7,7 +7,7 @@ module Fetch (
   //In
   clk, reset, stall,
   JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR, 
-  DecodeRd, DecodePCPlusFour  
+  DecodeRd, DecodePCPlusFour, DecodeOpCode
 );
 
   parameter InitAddress = 0;
@@ -20,8 +20,7 @@ module Fetch (
   input BranchCond, CondSrc, BranchResult;
   input [0:5] DecodeRd;
   input [0:31] DecodePCPlusFour, FPSR, JumpReg, IAR; 
- 
-
+  input [0:5] DecodeOpCode;
 
 
   output [0:5] OpCode, Function;
@@ -47,7 +46,10 @@ module Fetch (
   wire load_bubble, branch_bubble, jr_bubble;
 
   //Add .decode_op from decode stage.. 
-  hazard hazard0 (.decode_rd(DecodeRd), .fetch_op(op_code), .fetch_pc_plus_4(PCPlusFour), .fetch_rs1(rs1), .fetch_rs2(rs2), .decode_pc_plus_4(DecodePCPlusFour), .load_bubble(load_bubble), .branch_bubble(branch_bubble), .jr_bubble(jr_bubble));
+  hazard hazard0 (
+    .decode_rd(DecodeRd), .fetch_op(op_code), .decode_op(DecodeOpCode), .fetch_pc_plus_4(PCPlusFour), 
+    .fetch_rs1(rs1), .fetch_rs2(rs2), .decode_pc_plus_4(DecodePCPlusFour), 
+    .load_bubble(load_bubble), .branch_bubble(branch_bubble), .jr_bubble(jr_bubble));
 
     wire pc_stall;
     assign pc_stall = branch_bubble | load_bubble | jr_bubble;

@@ -64,6 +64,8 @@ module Processor (clk, reset);
   wire [0:5] reg_w_addr_wd;
   wire [0:31] reg_w_data_wd;
 
+  wire [0:31] mem_wb_data;
+
   // DEC Forwarding
   wire [0:1] dec_src;
 
@@ -76,17 +78,17 @@ module Processor (clk, reset);
 
   //Stages
 
-  MUX4_n #(32) jump_reg_mux(jump_reg_df, reg_out1_de, 32'bX, alu_out_mw, reg_w_data_wd, dec_src);  
+  MUX4_n #(32) jump_reg_mux(jump_reg_df, reg_out1_de, 32'bX, mem_wb_data, reg_w_data_wd, dec_src);  
   Fetch  #(.MemFile(InstructionFile), .InitAddress(InitAddr))  ifetch(
-  //Out:
-  .OpCode(opcode_fd), .Function(function_fd), .PCPlusFour(pc_plus_four_fd), 
-  .Rs1(rs1_fd), .Rs2(rs2_fd), .Rd(rd_fd), .Immediate(immediate_fd),
- 
-  //In
-  .clk(clk), .reset(reset), .stall(stall),
-  .JumpType(jump_type_df), .BranchCond(branch_cond_df), .CondSrc(cond_src_df), .BranchResult(branch_outcome_df), .FPSR(FPSR), .JumpReg(jump_reg_df), .IAR(IAR),
-  .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four)  
-);
+    //Out:
+    .OpCode(opcode_fd), .Function(function_fd), .PCPlusFour(pc_plus_four_fd), 
+    .Rs1(rs1_fd), .Rs2(rs2_fd), .Rd(rd_fd), .Immediate(immediate_fd),
+   
+    //In
+    .clk(clk), .reset(reset), .stall(stall),
+    .JumpType(jump_type_df), .BranchCond(branch_cond_df), .CondSrc(cond_src_df), .BranchResult(branch_outcome_df), .FPSR(FPSR), .JumpReg(jump_reg_df), .IAR(IAR),
+    .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four), .DecodeOpCode(opcode_de)
+  );
 
   Decode decode(
   // Out
@@ -120,13 +122,14 @@ module Processor (clk, reset);
   .NextDInSrc(din_src_de), .NextRegWE(reg_we_de), .NextRegWAddr(reg_w_addr_de), //WB
   .NextALUOp(alu_op_de), .NextFPUOp(fpu_op_de), .NextALUCruft(alu_cruft_de), .NextALUSrc(alu_src_de), .NextExtImm(ext_imm_de), //EXE
   .ASrc(exe_a_src), .BSrc(exe_b_src),
-  .MemData(alu_out_mw), .WBData(reg_w_data_wd),
+  .MemData(mem_wb_data), .WBData(reg_w_data_wd),
   .NextMEMSize(mem_size_de), .NextMEMWE(mem_we_de), .NextExtMEM(ext_mem_de)  //MEM
   );
 
   Memory memory (
   // Out
   .MEMDout(mem_out_mw), .ALUOut(alu_out_mw), .FPUOut(fpu_out_mw), .Opcode(opcode_mw), .Funct(function_mw), .PCPlusFour(pc_plus_four_mw), .Immediate(immediate_mw), //Data
+  .WBData(mem_wb_data),
   .DInSrc(din_src_mw), .RegWE(reg_we_mw), .RegWAddr(reg_w_addr_mw) , //WB Control
 
   // In
