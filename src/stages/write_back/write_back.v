@@ -34,7 +34,7 @@ module WriteBack (
 
   reg [0:1] din_src;
   reg reg_we;
-  reg [0:1] reg_w_addr;
+  reg [0:5] reg_w_addr;
 
   //Forward data
   assign RegWBWE = reg_we;
@@ -46,7 +46,7 @@ module WriteBack (
       fpu_out <= 0;
       mem_out <= 0;
       funct <= 6'b0;
-      opcode <= 6'b0;
+      opcode <= 6'h15;
       pc_plus_four <= 0;
       immediate <= 16'b0;
 

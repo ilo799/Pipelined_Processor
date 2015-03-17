@@ -15,7 +15,7 @@ DUMPFILE = processor.vcd
 
 default: ${TEST_GENERATED} ;
 
-${TESTPROG}: ${VERILOGFILES} ;
+${TESTPROG}: $(shell cat ${VERILOGFILES}) ;
 	${IVERILOG} -c  ${VERILOGFILES} -s ${TOPLEVEL} -o ${TESTPROG};
 
 test: ${TESTPROG} ;

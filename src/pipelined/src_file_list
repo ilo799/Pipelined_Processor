@@ -18,10 +18,14 @@ top.v
 ../alu/adder/32_cla_adder.v 
 ../alu/alu.v
 
+../forward/exe_forward.v
+../forward/dec_forward.v
+../forward/mem_forward.v
+
 ../stages/decode/decode.v
 ../stages/execute/execute.v
 ../stages/fetch/fetch.v
-../stages/fetch/hazard_detect.v
+../stages/fetch/hazard.v
 ../stages/memory/memory.v
 ../stages/write_back/write_back.v
 
