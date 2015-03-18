@@ -7,8 +7,8 @@ module Memory (
   // In
   clk, reset, stall,
   NextDInSrc, NextRegWE, NextRegWAddr, NextMEMSize, NextMEMWE, NextExtMEM,
-  NextALUOut, NextFPUOut, NextRegB, NextOpcode, NextFunct, NextPCPlusFour, NextImmediate
-
+  NextALUOut, NextFPUOut, NextRegB, NextOpcode, NextFunct, NextPCPlusFour, NextImmediate,
+  RegBSrc, WBRegB,
 );
 
   input clk, reset, stall;
@@ -24,6 +24,9 @@ module Memory (
   input [0:1] NextMEMSize;
   input NextMEMWE;
   input NextExtMEM;
+
+  input RegBSrc;
+  input [0:31] WBRegB;
 
   output [0:31] MEMDout;
   output [0:31] ALUOut, FPUOut;
@@ -63,7 +66,7 @@ module Memory (
   assign RegWAddr = reg_w_addr;
   assign RegWE = reg_we;
 
-
+  wire [0:31] write_data;
  
   always @(posedge clk or posedge reset) begin
   
@@ -103,7 +106,10 @@ module Memory (
 
   wire we;
   assign we = mem_we & !stall;
-  dmem mem (.addr(alu_out),.wData(reg_b), .writeEnable(we), .dsize(mem_size),.dsign(ext_mem), .clk(clk), .rData_out(MEMDout));
+
+  MUX2_n #(32) write_data_mux(write_data, reg_b, WBRegB, RegBSrc);
+
+  dmem mem (.addr(alu_out),.wData(write_data), .writeEnable(we), .dsize(mem_size),.dsign(ext_mem), .clk(clk), .rData_out(MEMDout));
 
   MUX4_n #(32) reg_din_mux (.F(WBData),.A(pc_plus_four), .B(alu_out), .C(fpu_out), .D(32'bX), .Sel(din_src));
 
