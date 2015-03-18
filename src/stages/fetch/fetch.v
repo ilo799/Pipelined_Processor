@@ -1,5 +1,5 @@
 module Fetch (
-
+//synopsis template 
   //Out
   OpCode, Function, PCPlusFour, 
   Rs1, Rs2, Rd, Immediate,
@@ -43,13 +43,13 @@ module Fetch (
   assign rs1 = {fp_src, Rs1};
   assign rs2 = {fp_src, Rs2};
 
+    wire pc_stall, need_nop;
   //Add .decode_op from decode stage.. 
   hazard hazard0 (
     .decode_rd(DecodeRd), .fetch_op(op_code), .decode_op(DecodeOpCode), .fetch_pc_plus_4(PCPlusFour), 
     .fetch_rs1(rs1), .fetch_rs2(rs2), .decode_pc_plus_4(DecodePCPlusFour), 
     .need_nop(need_nop), .pc_stall(pc_stall));
 
-    wire pc_stall, need_nop;
 
    MUX2_n #(6) mux1(OpCode, op_code, 6'h00, need_nop);
    MUX2_n #(6) mux2(Function, funct, 6'h15, need_nop);

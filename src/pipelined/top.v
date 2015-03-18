@@ -1,8 +1,22 @@
-module Processor (clk, reset);
+module Processor (
+
+//Outputs
+MemAddr, MemWData, MemWE, MemSize, MemExt,
+
+//Inputs
+DMEM_Dout, clk, reset);
   
   parameter InstructionFile = "../../class_examples/fibExample/instr.hex";
   parameter InitAddr = 0; 
+
+  output[0:31] MemWData;
+  output MemWE;
+  output[0:1] MemSize;
+  output MemExt;
+  output[0:31] MemAddr;
+
   input clk, reset;
+  input[0:31] DMEM_Dout;
 
   reg [0:31] IAR;
   reg [0:31] FPSR;
@@ -49,7 +63,10 @@ module Processor (clk, reset);
   wire [0:5] function_em;
   wire [0:31] pc_plus_four_em, alu_out_em, fpu_out_em, reg_b_em;
   wire [0:15] immediate_em;
-
+  wire [0:5] rs1_em;
+  wire [0:5] rs2_em;
+  wire  alu_src_em;
+ 
   //Mem -> WB
   wire reg_we_mw;
   wire[0:5] reg_w_addr_mw;
@@ -65,6 +82,8 @@ module Processor (clk, reset);
   wire [0:31] reg_w_data_wd;
 
   wire [0:31] mem_wb_data;
+  wire [0:5] opcode_wb, function_wb;
+
 
   // DEC Forwarding
   wire [0:1] dec_src;
@@ -117,6 +136,9 @@ module Processor (clk, reset);
   .MEMSize(mem_size_em), .MEMWE(mem_we_em), .ExtMEM(ext_mem_em), //MEM 
   .ALUOut(alu_out_em), .FPUOut(fpu_out_em), //Data created by this stage 
   .RegB(reg_b_em), .Opcode(opcode_em), .Funct(function_em), .PCPlusFour(pc_plus_four_em), .Immediate(immediate_em), //Forwarded Data
+  // For forward module
+  .Rs1(rs1_em), .Rs2(rs2_em), .AluSrc(alu_src_em), 
+
 
   // In
   .clk(clk), .reset(reset), .stall(stall),
@@ -129,23 +151,28 @@ module Processor (clk, reset);
   .NextMEMSize(mem_size_de), .NextMEMWE(mem_we_de), .NextExtMEM(ext_mem_de)  //MEM
   );
 
+  assign MemAddr = alu_out_em; 
+
   Memory memory (
   // Out
   .MEMDout(mem_out_mw), .ALUOut(alu_out_mw), .FPUOut(fpu_out_mw), .Opcode(opcode_mw), .Funct(function_mw), .PCPlusFour(pc_plus_four_mw), .Immediate(immediate_mw), //Data
   .WBData(mem_wb_data),
   .DInSrc(din_src_mw), .RegWE(reg_we_mw), .RegWAddr(reg_w_addr_mw) , //WB Control
+  .MemWData(MemWData), .MemWE(MemWE), .MemSize(MemSize), .MemExt(MemExt),
 
   // In
   .clk(clk), .reset(reset), .stall(stall),
   .NextDInSrc(din_src_em), .NextRegWE(reg_we_em), .NextRegWAddr(reg_w_addr_em), .NextMEMSize(mem_size_em), .NextMEMWE(mem_we_em), .NextExtMEM(ext_mem_em),
   .NextALUOut(alu_out_em), .NextFPUOut(fpu_out_em), .NextRegB(reg_b_em), 
   .NextOpcode(opcode_em), .NextFunct(function_em), .NextPCPlusFour(pc_plus_four_em), .NextImmediate(immediate_em),
-  .RegBSrc(mem_reg_b_src), .WBRegB(reg_w_data_wd)
+  .RegBSrc(mem_reg_b_src), .WBRegB(reg_w_data_wd), .DMEM_Dout(DMEM_Dout)
   );
 
   WriteBack write_back (
   // Out
   .RegWBWE(reg_we_wd), .RegWBAddr(reg_w_addr_wd), .RegWBData(reg_w_data_wd),
+  // for forward module
+  .Opcode(opcode_wb), .Function(function_wb),
 
   //In
   .clk(clk), .reset(reset), .stall(stall),
@@ -159,20 +186,20 @@ module Processor (clk, reset);
 		// Out
 		.EXEASrc(exe_a_src), .EXEBSrc(exe_b_src),
 		// In
-		.MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode), 
-		.MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(execute.rs1), .Rs2(execute.rs2), .ALUSrc(execute.alu_src)
+		.MEMRd(reg_w_addr_mw), .WBRd(reg_w_addr_wd), .MEMOpCode(opcode_mw), .WBOpCode(opcode_wb), 
+		.MEMFunction(function_mw), .WBFunction(function_wb), .Rs1(rs1_em), .Rs2(rs2_em), .ALUSrc(alu_src_em)
 	);
 
   DECForward dec_forward(
     .Src(dec_src),
-    .MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode),
-    .MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(rs1_de)
+    .MEMRd(reg_w_addr_mw), .WBRd(reg_w_addr_wd), .MEMOpCode(opcode_mw), .WBOpCode(opcode_wb),
+    .MEMFunction(function_mw), .WBFunction(function_wb), .Rs1(rs1_de)
   );
 
   MEMForward mem_forward(
     .MEMRegBSrc(mem_reg_b_src),
 
-    .WBRd(write_back.reg_w_addr), .MEMRs2(memory.reg_w_addr), .WBWE(write_back.reg_we)
+    .WBRd(reg_w_addr_wd), .MEMRs2(reg_w_addr_mw), .WBWE(reg_we_wd)
   );
 
   always @(posedge reset) begin
