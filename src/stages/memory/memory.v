@@ -82,7 +82,7 @@ module Memory (
 
   assign MemSize = mem_size;
   assign MemWE = mem_we;
-  assign MemExt = mem_ext;
+  assign MemExt = ext_mem;
   assign MemWData = write_data;  
 
   assign MEMDout = DMEM_Dout; 

@@ -110,8 +110,14 @@ module InstructionFetch(
 
   MUX2_n #(1) branch_val_mux(branch_val, FPSR[31], BranchResult, CondSrc);
   AND2_n #(1) should_branch_eqz_and(should_branch_eqz, branch_eqz_inst, !branch_val);
-  AND2_n #(1) should_branch_neq_and(should_branch_neq, !branch_eqz_inst, branch_val);
+
+  //see if this works...
+  wire branch_neq_inst;
+  AND2_n #(1) branch_neq_inst_and(branch_neq_inst, !branch_eqz_inst, branch_inst);
+  AND2_n #(1) should_branch_neq_and(should_branch_neq, branch_neq_inst, branch_val);
+
   OR2_n #(1) should_branch_or(should_branch, should_branch_neq, should_branch_eqz);
+
 
   OR2_n #(1) should_jump1_or(should_jump1, eq_j, eq_jal);
   OR2_n #(1) should_jump2_or(should_jump2, eq_jr, eq_jalr);

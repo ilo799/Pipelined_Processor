@@ -102,7 +102,11 @@ module Testbench;
       $fdisplay(pipe_fh, "Cycle %d: \n", cycle);
       $fdisplay (pipe_fh, "Stage:           |------IFetch------||------Decode------||------Execut------||------Memory------||------WriteB------|");
       $fdisplay (pipe_fh, "PCplus4:         |%d        ||%d        ||%d        ||%d        ||%d        |", Processor0.ifetch.ifetch.pc_plus_4, Processor0.pc_plus_four_fd, Processor0.pc_plus_four_de, Processor0.pc_plus_four_em, Processor0.pc_plus_four_mw);
-      $fdisplay (pipe_fh, "Instruction:     |%s        ||%s        ||%s        ||%s        ||%s        |", "      ????", decode, exe, memory, write);
+      $fdisplay (pipe_fh, "Instruction:     |%s        ||%s        ||%s        ||%s        ||%s        |\n", "      ????", decode, exe, memory, write);
+      $fdisplay (pipe_fh, "WriteBackR :     |%s        ||%s        ||        %d        ||        %d        ||        %d        |", "      ????", "      ????", Processor0.reg_w_addr_de, Processor0.reg_w_addr_em, Processor0.reg_w_addr_mw);
+      $fdisplay (pipe_fh, "Rs1        :     |%s        ||        %d        ||        %d        ||%s        ||%s        |", "      ????", Processor0.rs1_fd, Processor0.rs1_de, "      XXXX", "      XXXX");
+      $fdisplay (pipe_fh, "Rs2        :     |%s        ||        %d        ||        %d        ||%s        ||%s        |", "      ????", Processor0.rs2_fd, Processor0.rs2_de, "      XXXX", "      XXXX");
+      $fdisplay (pipe_fh, "Immed.     :     |%s        ||      %d        ||      %d       ||      %d        ||      %d        |", "      ????", Processor0.immediate_fd, Processor0.immediate_de, Processor0.immediate_em, Processor0.immediate_mw);
     end
    end
   end
