@@ -2,7 +2,7 @@
 //***32-bit by default***
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
-module NOT_n #(parameter  n=32) (F, A);
+module NOT_n #(parameter  n=32) (F, A); // synopsys template
   input [n-1: 0] A; 
   output[n-1: 0] F;
   genvar i;

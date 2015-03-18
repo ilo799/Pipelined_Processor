@@ -2,7 +2,7 @@
 //***32-bit by default***
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
-module OR2_n #(parameter  n=32) (F, A, B);
+module OR2_n #(parameter  n=32) (F, A, B); // synopsys template
   input [n-1: 0] A, B; 
   output[n-1: 0] F;
 

@@ -3,7 +3,7 @@
 
 //A=0
 //B=1
-module MUX2_n #(parameter  n=32) (F,A,B, Sel);
+module MUX2_n #(parameter  n=32) (F,A,B, Sel); 
   input [n-1: 0] A, B;
   input  Sel;
   output [n-1: 0] F;

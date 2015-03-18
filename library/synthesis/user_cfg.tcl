@@ -20,10 +20,11 @@
 # ========== Copyright Header End ============================================
 source -echo -verbose project_sparc_cfg.tcl
 
-set rtl_files {/home/ilo799/eecs362/pipelined_processor/library/mux2_n.v,
-               /home/ilo799/eecs362/pipelined_processor/library/and2_n.v,
-               /home/ilo799/eecs362/pipelined_processor/library/or2_n.v,
-               /home/ilo799/eecs362/pipelined_processor/library/not_n.v}
+set rtl_files { \
+               /home/ilo799/eecs362/pipelined_processor/library/and2_n.v \
+               /home/ilo799/eecs362/pipelined_processor/library/or2_n.v \
+               /home/ilo799/eecs362/pipelined_processor/library/not_n.v \
+		/home/ilo799/eecs362/pipelined_processor/library/mux2_n.v }
 
 set mix_files {}
 set top_module MUX2_n
