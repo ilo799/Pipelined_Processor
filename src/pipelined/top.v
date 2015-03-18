@@ -72,6 +72,9 @@ module Processor (clk, reset);
 	// EXE Forwarding
 	wire [0:1] exe_a_src, exe_b_src;
 
+  // MEM Forwarding
+  wire mem_reg_b_src;
+
   //Top Level Hazard Detection/Forwarding Logic here.
   wire stall;
   assign stall = 1'b0; 
@@ -136,7 +139,8 @@ module Processor (clk, reset);
   .clk(clk), .reset(reset), .stall(stall),
   .NextDInSrc(din_src_em), .NextRegWE(reg_we_em), .NextRegWAddr(reg_w_addr_em), .NextMEMSize(mem_size_em), .NextMEMWE(mem_we_em), .NextExtMEM(ext_mem_em),
   .NextALUOut(alu_out_em), .NextFPUOut(fpu_out_em), .NextRegB(reg_b_em), 
-  .NextOpcode(opcode_em), .NextFunct(function_em), .NextPCPlusFour(pc_plus_four_em), .NextImmediate(immediate_em)
+  .NextOpcode(opcode_em), .NextFunct(function_em), .NextPCPlusFour(pc_plus_four_em), .NextImmediate(immediate_em),
+  .RegBSrc(mem_reg_b_src), .WBRegB(reg_w_data_wd)
   );
 
   WriteBack write_back (
@@ -163,6 +167,12 @@ module Processor (clk, reset);
     .Src(dec_src),
     .MEMRd(memory.reg_w_addr), .WBRd(write_back.reg_w_addr), .MEMOpCode(memory.opcode), .WBOpCode(write_back.opcode),
     .MEMFunction(memory.funct), .WBFunction(write_back.funct), .Rs1(rs1_de)
+  );
+
+  MEMForward mem_forward(
+    .MEMRegBSrc(mem_reg_b_src),
+
+    .WBRd(write_back.reg_w_addr), .MEMRs2(memory.reg_w_addr), .WBWE(write_back.reg_we)
   );
 
   always @(posedge reset) begin
