@@ -1,6 +1,7 @@
 module WriteBack (
   // Out
   RegWBWE, RegWBAddr, RegWBData,
+  Opcode, Function,
 
   //In
   clk, reset, stall,
@@ -25,6 +26,8 @@ module WriteBack (
   output [0:5] RegWBAddr;
   output RegWBWE;
   output [0:31] RegWBData;
+  output [0:5] Opcode;
+  output [0:5] Function;
 
   reg [0:31] alu_out, fpu_out, mem_out;
   reg [0:5] funct;
@@ -38,7 +41,9 @@ module WriteBack (
 
   //Forward data
   assign RegWBWE = reg_we;
-  assign RegWBAddr = reg_w_addr; 
+  assign RegWBAddr = reg_w_addr;
+  assign Opcode = opcode;
+  assign Function = funct;
 
   always @(posedge clk or posedge reset) begin
     if (reset) begin

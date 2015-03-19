@@ -4,6 +4,7 @@ module Execute (
   MEMSize, MEMWE, ExtMEM, //MEM 
   ALUOut, FPUOut, //Data created by this stage 
   RegB, Opcode, Funct, PCPlusFour, Immediate, //Forwarded Data
+  Rs1, Rs2, AluSrc,
 
   // In
   clk, reset, stall,
@@ -58,6 +59,10 @@ module Execute (
   output [0:5] Opcode;
   output [0:15] Immediate;
 
+  output [0:5] Rs1;
+  output [0:5] Rs2;
+  output AluSrc;
+
   reg [0:31] reg_a, reg_b, pc_plus_four;
   reg  [0:15] immediate;
   reg [0:5] funct;
@@ -88,8 +93,9 @@ module Execute (
   assign MEMWE = mem_we; 
   assign ExtMEM = ext_mem;
   assign Immediate = immediate;  
-
-
+  assign Rs1 = rs1;
+  assign Rs2 = rs2;
+  assign AluSrc = alu_src;
 
   always @(posedge clk, posedge reset) begin
     if (reset) begin      

@@ -2,7 +2,7 @@
 //***32-bit by default***
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
-module EQ2_n #(parameter n=32) (F, A, B);
+module EQ2_n #(parameter n=32) (F, A, B); //synopsis template 
   input [0 : n-1] A, B;
   output F;
 

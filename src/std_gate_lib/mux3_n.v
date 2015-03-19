@@ -5,6 +5,7 @@
 //B=01
 //C=1X
 module MUX3_n #(parameter  n=32) (F,A,B,C,Sel);
+//synopsis template 
   input [0 : n-1] A, B, C;
   input [0:1] Sel;
   output [0 : n-1] F;

@@ -71,6 +71,7 @@ module Decode (
   reg [0:15] immd; 
   reg [0:4] rs1, rs2, rd;
 
+  wire [0:5] reg_a_addr, reg_b_addr; 
 	assign Rs1 = reg_a_addr;
 	assign Rs2 = reg_b_addr;
 
@@ -115,8 +116,7 @@ module Decode (
 
   //Reg File
   wire we;
-  wire [0:5] reg_a_addr, reg_b_addr; 
-
+  wire FPSrc;
   assign reg_a_addr = {FPSrc, rs1};
   assign reg_b_addr = {FPSrc, rs2};
   assign we = RegWBWE & !stall;
