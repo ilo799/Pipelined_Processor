@@ -21,42 +21,33 @@
 source -echo -verbose project_sparc_cfg.tcl
 
 # Modify the absolute path of the verilog source files.
-set rtl_files { 
-
-../std_gate_lib/not_n.v
-../std_gate_lib/xor2_n.v
-../std_gate_lib/or2_n.v
-../std_gate_lib/and2_n.v
-../std_gate_lib/mux2_n.v
-../std_gate_lib/mux4_n.v
-../std_gate_lib/mux3_n.v
-../std_gate_lib/eq2_n.v
-
-../register_file/register_file.v 
-
-../control/control.v
-
-../instruction_fetch/instruction_fetch.v
-
-../fpu/multiplier.v
-../fpu/fpu.v
-
-../alu/shifter/shifter.v
-../alu/adder/32_cla_adder.v
-../alu/alu.v
-
-../forward/exe_forward.v
-../forward/dec_forward.v
-../forward/mem_forward.v
-
-../stages/decode/decode.v
-../stages/execute/execute.v
-../stages/fetch/fetch.v
-../stages/fetch/hazard.v
-../stages/memory/memory.v
-../stages/write_back/write_back.v
-
-top.v  
+set rtl_files { \ 
+../std_gate_lib/not_n.v \
+../std_gate_lib/xor2_n.v \
+../std_gate_lib/or2_n.v \
+../std_gate_lib/and2_n.v \
+../std_gate_lib/mux2_n.v \
+../std_gate_lib/mux4_n.v \
+../std_gate_lib/mux3_n.v \
+../std_gate_lib/eq2_n.v \
+../register_file/register_file.v \ 
+../control/control.v \
+../instruction_fetch/instruction_fetch.v \
+../fpu/multiplier.v \
+../fpu/fpu.v \
+../alu/shifter/shifter.v \
+../alu/adder/32_cla_adder.v \
+../alu/alu.v \
+../forward/exe_forward.v \
+../forward/dec_forward.v \
+../forward/mem_forward.v \
+../stages/decode/decode.v \
+../stages/execute/execute.v \
+../stages/fetch/fetch.v \
+../stages/fetch/hazard.v \
+../stages/memory/memory.v \
+../stages/write_back/write_back.v \
+top.v  \
  }
 
 set mix_files {}
@@ -83,7 +74,7 @@ set default_setup_skew  0.00
 set default_hold_skew  0.00
 set default_clk_transition  0.00
 set clk_list {                        \
-                {clk   1000.0   0.000   0.000   0.000}        \
+                {clk   250.0   0.000   0.000   0.000}        \
 }
 set ideal_net_list {}
 set false_path_list {}

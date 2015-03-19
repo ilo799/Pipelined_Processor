@@ -3,7 +3,7 @@
 
 //A=0
 //B=1
-module MUX2_n #(parameter  n=32) (F,A,B, Sel); //synopsis template 
+module MUX2_n #(parameter  n=32) (F,A,B, Sel); //synopsys template 
   input [0 : n-1] A, B;
   input  Sel;
   output [0 : n-1] F;

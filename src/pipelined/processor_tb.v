@@ -110,7 +110,7 @@ module Testbench;
       $fdisplay (pipe_fh, "WriteBackR :     |%s        ||%s        ||        %d        ||        %d        ||        %d        |", "      ????", "      ????", Processor0.reg_w_addr_de, Processor0.reg_w_addr_em, Processor0.reg_w_addr_mw);
       $fdisplay (pipe_fh, "Rs1        :     |%s        ||        %d        ||        %d        ||%s        ||%s        |", "      ????", Processor0.rs1_fd, Processor0.rs1_de, "      XXXX", "      XXXX");
       $fdisplay (pipe_fh, "Rs2        :     |%s        ||        %d        ||        %d        ||%s        ||%s        |", "      ????", Processor0.rs2_fd, Processor0.rs2_de, "      XXXX", "      XXXX");
-      $fdisplay (pipe_fh, "Immed.     :     |%s        ||      %d        ||      %d       ||      %d        ||      %d        |", "      ????", Processor0.immediate_fd, Processor0.immediate_de, Processor0.immediate_em, Processor0.immediate_mw);
+      $fdisplay (pipe_fh, "Immed.     :     |%s        ||      %d        ||      %d      ||      %d        ||      %d        |", "      ????", Processor0.immediate_fd, Processor0.immediate_de, Processor0.immediate_em, Processor0.immediate_mw);
     end
    end
   end

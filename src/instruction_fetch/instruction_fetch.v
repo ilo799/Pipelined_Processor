@@ -1,5 +1,5 @@
 module InstructionFetch(
-//synopsis template 
+//synopsys template 
   //Out
   OpCode, Function, PCPlusFour, 
   Rs1, Rs2, Rd, Immediate,

@@ -5,7 +5,6 @@ MemAddr, MemWData, MemWE, MemSize, MemExt, PC_Out,
 
 //Inputs
 DMEM_Dout, IMEM_Dout, clk, reset);
-  
   parameter InstructionFile = "../../class_examples/fibExample/instr.hex";
   parameter InitAddr = 0; 
 

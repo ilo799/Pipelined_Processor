@@ -6,7 +6,7 @@
 //C=10
 //D=11
 module MUX4_n #(parameter  n=32) (F,A,B,C,D,Sel);
-//synopsis template 
+//synopsys template 
   input [0 : n-1] A, B, C, D;
 
   input [0:1] Sel;

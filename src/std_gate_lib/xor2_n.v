@@ -3,7 +3,7 @@
 //Copyright: Northwestern EECS 362 Team Senioritis 
 
 module XOR2_n #(parameter  n=32) (F, A, B);
-//synopsis template  
+//synopsys template  
   input [0 : n-1] A, B; 
   output[0 : n-1] F;
   genvar i;
