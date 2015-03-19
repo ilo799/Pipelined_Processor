@@ -44,6 +44,7 @@ set syn_home [sh echo \$SYN_LIB]
  
 source -echo -verbose user_cfg.tcl
 
+# add the search path "/vol/eecs362/synthesis/"
 set search_path [concat $search_path script/ /vol/eecs362/synthesis/]
 
 set search_path [concat $syn_home \
@@ -51,9 +52,6 @@ set search_path [concat $syn_home \
 
 #set search_path [concat $search_path /homes/gho705/fault/synthesis-stuff/src/s1_core/trunk/hdl/rtl/sparc_core /homes/gho705/fault/synthesis-stuff/src/a5-syn ]
 set search_path [concat $search_path . ]
-
-
-
 
 foreach include_path $include_paths {
    set search_path [concat $search_path $dv_root/$include_path]

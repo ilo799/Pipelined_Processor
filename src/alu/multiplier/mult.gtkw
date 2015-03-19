@@ -1,0 +1,44 @@
+[*]
+[*] GTKWave Analyzer v3.3.64 (w)1999-2014 BSI
+[*] Wed Mar 11 22:55:45 2015
+[*]
+[dumpfile] "(null)"
+[savefile] "/Users/zsmith/src/verilog/Pipelined_Processor/src/alu/multiplier/mult.gtkw"
+[timestart] 929670
+[size] 1676 1005
+[pos] -1 -1
+*-14.003799 1007280 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] Testbench.
+[sst_width] 193
+[signals_width] 457
+[sst_expanded] 1
+[sst_vpaned_height] 575
+@28
+Testbench.mult.clk
+@420
+Testbench.mult.A[0:31]
+Testbench.mult.B[0:31]
+@421
+Testbench.mult.R[0:31]
+@28
+Testbench.mult.Ready
+Testbench.mult.Start
+@24
+Testbench.mult.counter[0:15]
+Testbench.mult.counter_plus_one[0:15]
+Testbench.mult.multiplicand_plus_prod[0:31]
+Testbench.mult.next_counter[0:15]
+@22
+Testbench.mult.next_product_reg[0:63]
+Testbench.mult.product_reg[0:63]
+Testbench.mult.product_shifted[0:63]
+Testbench.mult.product_shifted_bottom[0:31]
+Testbench.mult.product_shifted_top[0:31]
+Testbench.mult.reg_init[0:63]
+Testbench.mult.shift_in[0:63]
+Testbench.mult.abs_a[0:31]
+Testbench.mult.abs_b[0:31]
+Testbench.mult.multiplier[0:31]
+Testbench.mult.multiplicand[0:31]
+[pattern_trace] 1
+[pattern_trace] 0
