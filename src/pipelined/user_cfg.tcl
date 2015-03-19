@@ -23,6 +23,15 @@ source -echo -verbose project_sparc_cfg.tcl
 # Modify the absolute path of the verilog source files.
 set rtl_files { 
 
+../std_gate_lib/not_n.v
+../std_gate_lib/xor2_n.v
+../std_gate_lib/or2_n.v
+../std_gate_lib/and2_n.v
+../std_gate_lib/mux2_n.v
+../std_gate_lib/mux4_n.v
+../std_gate_lib/mux3_n.v
+../std_gate_lib/eq2_n.v
+
 ../register_file/register_file.v 
 
 ../control/control.v
@@ -47,14 +56,6 @@ set rtl_files {
 ../stages/memory/memory.v
 ../stages/write_back/write_back.v
 
-../std_gate_lib/mux4_n.v
-../std_gate_lib/mux3_n.v
-../std_gate_lib/mux2_n.v
-../std_gate_lib/and2_n.v
-../std_gate_lib/or2_n.v
-../std_gate_lib/xor2_n.v
-../std_gate_lib/not_n.v
-../std_gate_lib/eq2_n.v
 top.v  
  }
 

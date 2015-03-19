@@ -86,9 +86,7 @@ module Memory (
   assign MemWE = mem_we;
   assign MemExt = ext_mem;
   assign MemWData = write_data;  
-
   assign MEMDout = DMEM_Dout; 
-
  
   always @(posedge clk or posedge reset) begin
   
