@@ -151,7 +151,7 @@ DMEM_Dout, clk, reset);
   .NextMEMSize(mem_size_de), .NextMEMWE(mem_we_de), .NextExtMEM(ext_mem_de)  //MEM
   );
 
-  assign MemAddr = alu_out_em; 
+  assign MemAddr = alu_out_mw; 
 
   Memory memory (
   // Out
