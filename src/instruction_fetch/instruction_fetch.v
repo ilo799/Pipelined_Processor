@@ -3,10 +3,14 @@ module InstructionFetch(
   //Out
   OpCode, Function, PCPlusFour, 
   Rs1, Rs2, Rd, Immediate,
-
+  //Imem interface
+  PC_Out, 
+  
   //In
   clk, reset, stall,
-  JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR
+  JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR,
+  //Imem interface
+  Instruction
 );
 
   parameter InitAddress = 0;
@@ -17,11 +21,13 @@ module InstructionFetch(
   input BranchCond, CondSrc;
   input [0:31]  FPSR, JumpReg, IAR;
   input BranchResult;
+  input [0:31] Instruction;
 
   output [0:5] OpCode, Function;
   output [0:31] PCPlusFour;
   output [0:4] Rs1, Rs2, Rd;
   output [0:15] Immediate;
+  output [0:31] PC_Out; 
 
   reg [0:31] PC;
   wire [0:31] inst, next_pc, pc_plus_4, imm16, imm26, imm16_plus_pc4, imm26_plus_pc4, jump_pc;
@@ -30,6 +36,9 @@ module InstructionFetch(
   wire should_branch, branch_inst, branch_val, branch_inst1;
 
   wire should_branch_eqz, should_branch_neq, branch_eqz_inst;
+
+  assign PC_Out = PC;
+  assign inst = Instruction;
 
   LCU32bit pc_adder(
     .inA(PC),
@@ -41,7 +50,9 @@ module InstructionFetch(
   assign OpCode = op_code;
   assign Function = fn;
 
-  imem imem(.addr(PC), .instr(inst));
+
+
+  //imem imem(.addr(PC), .instr(inst));
 
   assign op_code = inst[0:5];
 
@@ -124,9 +135,9 @@ module InstructionFetch(
   OR2_n #(1) should_jump3_or(should_jump3, should_jump1, should_jump2);
   OR2_n #(1) should_jump_or(should_jump, should_jump3, should_branch);
 
-  initial begin
-    $readmemh(MemFile, imem.mem);
-  end
+  //initial begin
+    //$readmemh(MemFile, imem.mem);
+  //end
 
   always @(posedge clk, posedge reset) begin
     if (reset) begin

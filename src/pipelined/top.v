@@ -1,10 +1,10 @@
 module Processor (
 
 //Outputs
-MemAddr, MemWData, MemWE, MemSize, MemExt,
+MemAddr, MemWData, MemWE, MemSize, MemExt, PC_Out, 
 
 //Inputs
-DMEM_Dout, clk, reset);
+DMEM_Dout, IMEM_Dout, clk, reset);
   
   parameter InstructionFile = "../../class_examples/fibExample/instr.hex";
   parameter InitAddr = 0; 
@@ -14,9 +14,11 @@ DMEM_Dout, clk, reset);
   output[0:1] MemSize;
   output MemExt;
   output[0:31] MemAddr;
+  output[0:31] PC_Out;
 
   input clk, reset;
   input[0:31] DMEM_Dout;
+  input[0:31] IMEM_Dout; 
 
   reg [0:31] IAR;
   reg [0:31] FPSR;
@@ -101,15 +103,16 @@ DMEM_Dout, clk, reset);
   //Stages
 
   MUX4_n #(32) jump_reg_mux(jump_reg_df, reg_out1_de, 32'bX, mem_wb_data, reg_w_data_wd, dec_src);  
-  Fetch  #(.MemFile(InstructionFile), .InitAddress(InitAddr))  ifetch(
+  
+ Fetch  #(.MemFile(InstructionFile), .InitAddress(InitAddr))  ifetch(
     //Out:
     .OpCode(opcode_fd), .Function(function_fd), .PCPlusFour(pc_plus_four_fd), 
-    .Rs1(rs1_fd), .Rs2(rs2_fd), .Rd(rd_fd), .Immediate(immediate_fd),
+    .Rs1(rs1_fd), .Rs2(rs2_fd), .Rd(rd_fd), .Immediate(immediate_fd), .PC_Out(PC_Out), 
    
     //In
     .clk(clk), .reset(reset), .stall(stall),
     .JumpType(jump_type_df), .BranchCond(branch_cond_df), .CondSrc(cond_src_df), .BranchResult(branch_outcome_df), .FPSR(FPSR), .JumpReg(jump_reg_df), .IAR(IAR),
-    .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four), .DecodeOpCode(opcode_de)
+    .DecodeRd(decode_rd), .DecodePCPlusFour(decode_pc_plus_four), .DecodeOpCode(opcode_de), .Instruction(IMEM_Dout)
   );
 
   Decode decode(

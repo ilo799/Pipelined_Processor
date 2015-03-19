@@ -2,12 +2,12 @@ module Fetch (
 //synopsis template 
   //Out
   OpCode, Function, PCPlusFour, 
-  Rs1, Rs2, Rd, Immediate,
+  Rs1, Rs2, Rd, Immediate, PC_Out,
 
   //In
   clk, reset, stall,
   JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR, 
-  DecodeRd, DecodePCPlusFour, DecodeOpCode
+  DecodeRd, DecodePCPlusFour, DecodeOpCode, Instruction
 );
 
   parameter InitAddress = 0;
@@ -21,12 +21,14 @@ module Fetch (
   input [0:5] DecodeRd;
   input [0:31] DecodePCPlusFour, FPSR, JumpReg, IAR; 
   input [0:5] DecodeOpCode;
-
+  input [0:31] Instruction;
 
   output [0:5] OpCode, Function;
   output [0:31] PCPlusFour;
   output [0:4] Rs1, Rs2, Rd;
   output [0:15] Immediate;
+  output [0:31] PC_Out;
+
 
   wire[0:5] op_code, funct;
   wire fp_src;
@@ -55,13 +57,13 @@ module Fetch (
 
   //try this hack, 
    wire[0:31] pc_plus_four; 
-   MUX2_n #(32) mux3(PCPlusFour, pc_plus_four, 32'bX, hazard0.branch_hazard);
-
+   MUX2_n #(32) mux3(PCPlusFour, pc_plus_four, 32'b0, hazard0.branch_hazard);
 
   InstructionFetch #(.MemFile(MemFile), .InitAddress(InitAddress))  ifetch(
     op_code, funct, pc_plus_four, 
-    Rs1, Rs2, Rd, Immediate,
+    Rs1, Rs2, Rd, Immediate, PC_Out,
     clk, reset, pc_stall,
-    JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR
+    JumpType, BranchCond, CondSrc, BranchResult, FPSR, JumpReg, IAR, Instruction
   );
+
 endmodule

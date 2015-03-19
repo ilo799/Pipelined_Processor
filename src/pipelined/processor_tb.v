@@ -30,15 +30,18 @@ module Testbench;
   wire mem_ext;
   wire [0:31] dmem_dout; 
   wire [0:31] mem_addr;
+  wire [0:31] pc_out;
+  wire [0:31] imem_dout; 
 
   Processor #(.InstructionFile("../../class_examples/fibExample/instr.hex")) Processor0 (.clk(clk), .reset(reset),  
   //Outputs
-  .MemWData(mem_w_data), .MemWE(mem_we), .MemSize(mem_size), .MemExt(mem_ext), .MemAddr(mem_addr),
+  .MemWData(mem_w_data), .MemWE(mem_we), .MemSize(mem_size), .MemExt(mem_ext), .MemAddr(mem_addr), .PC_Out(pc_out), 
   ////Inputs
-  .DMEM_Dout(dmem_dout));
+  .DMEM_Dout(dmem_dout), .IMEM_Dout(imem_dout));
 
 
   dmem mem (.addr(mem_addr), .wData(mem_w_data), .writeEnable(mem_we),.dsize(mem_size),.dsign(mem_ext), .clk(clk), .rData_out(dmem_dout));
+  imem imem(.addr(pc_out), .instr(imem_dout));
 
   initial begin
     $dumpfile("processor.vcd");
@@ -46,7 +49,8 @@ module Testbench;
     $readmemh("../../class_examples/fibExample/data.hex", mem.mem);
     //$display("MemWAddr\tMemDin");
     //$monitor("%h\t%h", Processor0.memory.mem.addr, Processor0.memory.mem.wData);
-    
+    $readmemh("../../class_examples/fibExample/instr.hex", imem.mem);
+  
     pipe_fh = $fopen("pipestage.log");
     mem_fh =  $fopen("mem.log");
 
