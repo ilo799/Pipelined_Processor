@@ -68,6 +68,8 @@ module Memory (
   reg mem_we;
   reg  ext_mem;
 
+  wire [0:31] write_data;
+
   //Forward data
   assign FPUOut = fpu_out;
   assign ALUOut = alu_out;
@@ -86,8 +88,6 @@ module Memory (
   assign MemWData = write_data;  
 
   assign MEMDout = DMEM_Dout; 
-
-  wire [0:31] write_data;
  
   always @(posedge clk or posedge reset) begin
   
